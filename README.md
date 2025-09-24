@@ -50,11 +50,31 @@ npm start
 3. Ir a Settings → Pages → Deploy from branch → main
 4. URL: `https://aalvarez351.github.io/nombre-repo/`
 
-### Backend (Heroku)
-1. Crear app en Heroku
-2. Conectar con GitHub
-3. Configurar variables de entorno en Heroku
-4. Desplegar automáticamente
+### Backend (Koyeb - Actual)
+1. Ve a [Koyeb Dashboard](https://app.koyeb.com)
+2. Crea nueva app conectando tu repo de GitHub
+3. Configura variables de entorno:
+   ```
+   MONGO_URI=mongodb+srv://aalvarez351:Lentesdesol@ianube.furqsl0.mongodb.net/
+   JWT_SECRET=tu_clave_jwt_segura
+   PORT=8000
+   ```
+4. Build command: `npm install`
+5. Run command: `npm start`
+6. Despliega y obtén la URL (ej: `https://tu-app.koyeb.app`)
+
+### Solución de Problemas MongoDB en Koyeb
+Si hay errores SSL con MongoDB Atlas:
+1. Ve a MongoDB Atlas → Network Access
+2. Agrega IP `0.0.0.0/0` (temporalmente)
+3. O configura DNS personalizado en Koyeb
+
+### Alternativa: Railway (Más confiable)
+1. Ve a [Railway.app](https://railway.app)
+2. Conecta tu repo de GitHub
+3. Railway detecta automáticamente Node.js
+4. Configura variables de entorno
+5. Se despliega automáticamente
 
 ## URLs de Producción
 - **Frontend**: `https://aalvarez351.github.io/`
