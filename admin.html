@@ -241,7 +241,7 @@
             async function loadUsers() {
                 const token = localStorage.getItem('token');
                 try {
-                    const response = await fetch('https://conectandopersonas.life/users', {
+                    const response = await fetch('https://clean-daphene-personal351-7963be99.koyeb.app/users', {
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
                     if (response.ok) {
