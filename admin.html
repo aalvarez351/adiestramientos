@@ -241,7 +241,7 @@
             async function loadUsers() {
                 const token = localStorage.getItem('token');
                 try {
-                    const response = await fetch('http://localhost:3000/users', {
+                    const response = await fetch('https://conectandopersonas.life/users', {
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
                     if (response.ok) {
