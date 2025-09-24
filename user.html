@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>User Portal - Advanced Computer Courses</title>
+        <link href="css/styles.css" rel="stylesheet" />
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="user.html">User Portal</a>
+                <div class="navbar-nav ms-auto">
+                    <span class="navbar-text me-3" id="userName"></span>
+                    <button class="btn btn-outline-light" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </nav>
+        <div class="container py-5">
+            <h1>Welcome to Your Portal</h1>
+            <p>Explore detailed information about our advanced computer courses.</p>
+            <div id="coursesContainer" class="row">
+            </div>
+        </div>
+        <footer class="bg-dark text-white py-4">
+            <div class="container text-center">
+                <p>&copy; 2023 Advanced Computer Courses. All rights reserved.</p>
+            </div>
+        </footer>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                validateUserAccess();
+            });
+
+            function validateUserAccess() {
+                const token = localStorage.getItem('token');
+                const role = localStorage.getItem('role');
+
+                if (!token || role !== 'user') {
+                    alert('Acceso no autorizado. Debes iniciar sesión como usuario.');
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                const name = localStorage.getItem('name');
+                document.getElementById('userName').textContent = `Hola, ${name}`;
+                loadCourses();
+            }
+
+            async function loadCourses() {
+                try {
+                    const response = await fetch('http://localhost:3000/courses');
+                    if (response.ok) {
+                        const courses = await response.json();
+                        const container = document.getElementById('coursesContainer');
+                        courses.forEach(course => {
+                            const card = `
+                                <div class="col-md-6 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${course.name}</h5>
+                                            <p class="card-text">${course.description}</p>
+                                            <p><strong>Details:</strong> ${course.details}</p>
+                                            <p><strong>Duration:</strong> ${course.duration}</p>
+                                            <p><strong>Level:</strong> ${course.level}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            container.innerHTML += card;
+                        });
+                    } else {
+                        alert('Error loading courses: ' + response.status + ' ' + response.statusText);
+                    }
+                } catch (err) {
+                    alert('Error loading courses: ' + err.message);
+                }
+            }
+
+            function logout() {
+                localStorage.clear();
+                window.location.href = 'login.html';
+            }
+        </script>
+    </body>
+</html>

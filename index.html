@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="Cursos avanzados de computación para profesionales. Aprende IA, Ciberseguridad, Ciencia de Datos y más." />
+        <meta name="author" content="Advanced Computer Courses" />
+        <title>Cursos Avanzados de Computación | Tecnología del Futuro</title>
+        <link href="css/styles.css" rel="stylesheet" />
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <style>
+            .bg-gradient-primary {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            }
+            .bg-gradient-secondary {
+                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            }
+            .card {
+                transition: all 0.3s ease;
+                border: none;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+            .card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            }
+            .course-icon {
+                font-size: 3rem;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+            .btn-gradient {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border: none;
+                transition: all 0.3s ease;
+            }
+            .btn-gradient:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            }
+            .navbar-brand {
+                font-weight: 700;
+                font-size: 1.5rem;
+            }
+            .hero-section {
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                position: relative;
+                overflow: hidden;
+            }
+            .hero-section::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="%23ffffff10" points="0,1000 1000,0 1000,1000"/></svg>');
+                z-index: 1;
+            }
+            .hero-content {
+                position: relative;
+                z-index: 2;
+            }
+            .stats-section {
+                background: #f8f9fa;
+            }
+            .stat-number {
+                font-size: 3rem;
+                font-weight: 700;
+                color: #667eea;
+            }
+            .section-title {
+                position: relative;
+                display: inline-block;
+            }
+            .section-title::after {
+                content: '';
+                position: absolute;
+                bottom: -10px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 50px;
+                height: 3px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">
+                    <i class="fas fa-graduation-cap me-2"></i>
+                    Cursos Avanzados
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#courses">Cursos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#about">Nosotros</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#contact">Contacto</a>
+                        </li>
+                        <li class="nav-item ms-2">
+                            <a class="btn btn-outline-light me-2" href="login.html">
+                                <i class="fas fa-sign-in-alt me-1"></i>Iniciar Sesión
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-gradient text-white" href="register.html">
+                                <i class="fas fa-user-plus me-1"></i>Registrar Interés
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero-section bg-gradient-primary text-white">
+            <div class="container hero-content">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <h1 class="display-3 fw-bold mb-4">Domina las Tecnologías del Futuro</h1>
+                        <p class="lead mb-4">Impulsa tu carrera con nuestros cursos avanzados de computación. Aprende de expertos y obtén las habilidades más demandadas en el mercado tecnológico.</p>
+                        <div class="d-flex flex-column flex-sm-row gap-3">
+                            <a href="register.html" class="btn btn-light btn-lg px-4">
+                                <i class="fas fa-rocket me-2"></i>Comenzar Ahora
+                            </a>
+                            <a href="#courses" class="btn btn-outline-light btn-lg px-4">
+                                <i class="fas fa-play me-2"></i>Ver Cursos
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 text-center">
+                        <div class="mt-5 mt-lg-0">
+                            <i class="fas fa-laptop-code" style="font-size: 15rem; opacity: 0.3;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section py-5">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-md-3 mb-4">
+                        <div class="stat-number">500+</div>
+                        <p class="text-muted">Estudiantes Graduados</p>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="stat-number">95%</div>
+                        <p class="text-muted">Tasa de Empleabilidad</p>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="stat-number">50+</div>
+                        <p class="text-muted">Empresas Aliadas</p>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="stat-number">24/7</div>
+                        <p class="text-muted">Soporte Técnico</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Courses Section -->
+        <section id="courses" class="py-5">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <h2 class="section-title display-5 fw-bold">Nuestros Cursos</h2>
+                    <p class="lead text-muted mt-4">Programas diseñados por expertos para profesionales ambiciosos</p>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card h-100 text-center p-4">
+                            <div class="course-icon mb-3">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h5 class="card-title fw-bold">Inteligencia Artificial</h5>
+                            <p class="card-text text-muted">Explora algoritmos de IA, aprendizaje automático y redes neuronales. Aprende a construir sistemas inteligentes.</p>
+                            <div class="mt-auto">
+                                <span class="badge bg-primary mb-2">12 semanas</span>
+                                <span class="badge bg-secondary mb-2">Avanzado</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card h-100 text-center p-4">
+                            <div class="course-icon mb-3">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h5 class="card-title fw-bold">Ciberseguridad</h5>
+                            <p class="card-text text-muted">Protege sistemas y datos de amenazas cibernéticas. Domina el hacking ético y protocolos de seguridad.</p>
+                            <div class="mt-auto">
+                                <span class="badge bg-primary mb-2">10 semanas</span>
+                                <span class="badge bg-secondary mb-2">Avanzado</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card h-100 text-center p-4">
+                            <div class="course-icon mb-3">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h5 class="card-title fw-bold">Ciencia de Datos</h5>
+                            <p class="card-text text-muted">Analiza e interpreta datos complejos. Aprende Python, R y herramientas de big data.</p>
+                            <div class="mt-auto">
+                                <span class="badge bg-primary mb-2">14 semanas</span>
+                                <span class="badge bg-secondary mb-2">Avanzado</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card h-100 text-center p-4">
+                            <div class="course-icon mb-3">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <h5 class="card-title fw-bold">Desarrollo Web</h5>
+                            <p class="card-text text-muted">Construye aplicaciones web modernas con HTML, CSS, JavaScript y frameworks como React.</p>
+                            <div class="mt-auto">
+                                <span class="badge bg-primary mb-2">16 semanas</span>
+                                <span class="badge bg-warning text-dark mb-2">Intermedio-Avanzado</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card h-100 text-center p-4">
+                            <div class="course-icon mb-3">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <h5 class="card-title fw-bold">Machine Learning</h5>
+                            <p class="card-text text-muted">Sumérgete en modelos de ML, entrenamiento y despliegue. Proyectos prácticos incluidos.</p>
+                            <div class="mt-auto">
+                                <span class="badge bg-primary mb-2">12 semanas</span>
+                                <span class="badge bg-secondary mb-2">Avanzado</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card h-100 text-center p-4">
+                            <div class="course-icon mb-3">
+                                <i class="fas fa-cloud"></i>
+                            </div>
+                            <h5 class="card-title fw-bold">Cloud Computing</h5>
+                            <p class="card-text text-muted">Domina AWS, Azure y Google Cloud. Aprende arquitecturas escalables y servicios en la nube.</p>
+                            <div class="mt-auto">
+                                <span class="badge bg-primary mb-2">10 semanas</span>
+                                <span class="badge bg-secondary mb-2">Avanzado</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-5">
+                    <a href="register.html" class="btn btn-gradient btn-lg text-white px-5">
+                        <i class="fas fa-graduation-cap me-2"></i>Registrar Interés en Cursos
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="bg-light py-5">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <h2 class="section-title display-5 fw-bold mb-4">¿Por qué elegirnos?</h2>
+                        <div class="row">
+                            <div class="col-sm-6 mb-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-gradient-primary text-white rounded-circle p-3 me-3">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Instructores Expertos</h6>
+                                        <small class="text-muted">Profesionales de la industria</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mb-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-gradient-primary text-white rounded-circle p-3 me-3">
+                                        <i class="fas fa-certificate"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Certificación Oficial</h6>
+                                        <small class="text-muted">Reconocida internacionalmente</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mb-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-gradient-primary text-white rounded-circle p-3 me-3">
+                                        <i class="fas fa-laptop"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Aprendizaje Práctico</h6>
+                                        <small class="text-muted">Proyectos reales</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mb-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-gradient-primary text-white rounded-circle p-3 me-3">
+                                        <i class="fas fa-handshake"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Bolsa de Trabajo</h6>
+                                        <small class="text-muted">Conexiones con empresas</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 text-center">
+                        <i class="fas fa-award" style="font-size: 12rem; color: #667eea; opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-dark text-white py-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 mb-4">
+                        <h5 class="fw-bold mb-3">
+                            <i class="fas fa-graduation-cap me-2"></i>
+                            Cursos Avanzados
+                        </h5>
+                        <p class="text-muted">Formando a los profesionales tecnológicos del futuro con educación de calidad y metodologías innovadoras.</p>
+                        <div class="d-flex gap-3">
+                            <a href="#" class="text-white-50"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="text-white-50"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="text-white-50"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="text-white-50"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6 mb-4">
+                        <h6 class="fw-bold mb-3">Cursos</h6>
+                        <ul class="list-unstyled">
+                            <li><a href="#" class="text-white-50 text-decoration-none">Inteligencia Artificial</a></li>
+                            <li><a href="#" class="text-white-50 text-decoration-none">Ciberseguridad</a></li>
+                            <li><a href="#" class="text-white-50 text-decoration-none">Ciencia de Datos</a></li>
+                            <li><a href="#" class="text-white-50 text-decoration-none">Desarrollo Web</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 col-md-6 mb-4">
+                        <h6 class="fw-bold mb-3">Empresa</h6>
+                        <ul class="list-unstyled">
+                            <li><a href="#" class="text-white-50 text-decoration-none">Nosotros</a></li>
+                            <li><a href="#" class="text-white-50 text-decoration-none">Instructores</a></li>
+                            <li><a href="#" class="text-white-50 text-decoration-none">Testimonios</a></li>
+                            <li><a href="#" class="text-white-50 text-decoration-none">Blog</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-4 mb-4">
+                        <h6 class="fw-bold mb-3">Contacto</h6>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-envelope me-3"></i>
+                            <span class="text-white-50">info@cursosavanzados.com</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-phone me-3"></i>
+                            <span class="text-white-50">+1 (555) 123-4567</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-map-marker-alt me-3"></i>
+                            <span class="text-white-50">123 Tech Street, Ciudad Tecnológica</span>
+                        </div>
+                    </div>
+                </div>
+                <hr class="my-4">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="text-white-50 mb-0">&copy; 2024 Cursos Avanzados de Computación. Todos los derechos reservados.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <a href="#" class="text-white-50 text-decoration-none me-3">Política de Privacidad</a>
+                        <a href="#" class="text-white-50 text-decoration-none">Términos y Condiciones</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="js/scripts.js"></script>
+        <script>
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Navbar background change on scroll
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 50) {
+                    navbar.classList.add('bg-dark');
+                } else {
+                    navbar.classList.remove('bg-dark');
+                }
+            });
+        </script>
+    </body>
+</html>
