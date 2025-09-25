@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="Transparencia en el Sistema de Préstamos - Cómo funcionan nuestros cálculos y datos" />
+        <meta name="author" content="" />
+        <title>Transparencia - Sistema de Préstamos</title>
+        <link href="css/styles.css" rel="stylesheet" />
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <style>
+            .formula-box {
+                background-color: #f8f9fa;
+                border: 1px solid #dee2e6;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 10px 0;
+                font-family: 'Courier New', monospace;
+            }
+            .highlight {
+                background-color: #fff3cd;
+                padding: 2px 4px;
+                border-radius: 3px;
+            }
+            .data-flow {
+                border: 2px solid #007bff;
+                border-radius: 10px;
+                padding: 20px;
+                margin: 20px 0;
+                background-color: #f8f9ff;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">Sistema de Préstamos</a>
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link" href="login.html">Iniciar Sesión</a>
+                    <a class="nav-link" href="register-user.html">Registrarse</a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="text-center mb-5">
+                        <i class="fas fa-shield-alt fa-4x text-primary mb-3"></i>
+                        <h1 class="display-4">Transparencia Total</h1>
+                        <p class="lead">Entendiendo cómo funciona nuestro sistema de préstamos</p>
+                        <p class="text-muted">La confianza se construye con claridad. Aquí explicamos detalladamente nuestros procesos, fórmulas y manejo de datos.</p>
+                    </div>
+
+                    <!-- Introducción -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="card-title mb-0"><i class="fas fa-info-circle me-2"></i>¿Por qué la Transparencia?</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>En nuestro compromiso por generar confianza y seguridad en nuestros usuarios, hemos desarrollado este espacio donde explicamos de manera clara y detallada:</p>
+                            <ul>
+                                <li><strong>Cómo funciona el sistema completo</strong> de préstamos</li>
+                                <li><strong>Las fórmulas matemáticas</strong> utilizadas en los cálculos</li>
+                                <li><strong>La relación entre los datos</strong> y cómo se interconectan</li>
+                                <li><strong>El flujo de información</strong> desde el registro hasta el pago final</li>
+                            </ul>
+                            <p>Creemos que la transparencia es fundamental para construir relaciones duraderas basadas en la confianza mutua.</p>
+                        </div>
+                    </div>
+
+                    <!-- Arquitectura del Sistema -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h3 class="card-title mb-0"><i class="fas fa-cogs me-2"></i>Arquitectura del Sistema</h3>
+                        </div>
+                        <div class="card-body">
+                            <h5>Componentes Principales:</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6><i class="fas fa-users text-primary me-2"></i>Portal del Administrador</h6>
+                                    <ul>
+                                        <li>Registro y gestión de clientes</li>
+                                        <li>Creación y administración de préstamos</li>
+                                        <li>Registro manual de pagos</li>
+                                        <li>Generación de reportes</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6><i class="fas fa-user text-success me-2"></i>Portal del Cliente</h6>
+                                    <ul>
+                                        <li>Visualización de préstamos activos</li>
+                                        <li>Historial de pagos realizados</li>
+                                        <li>Estado de cuenta en tiempo real</li>
+                                        <li>Descarga de comprobantes</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <h5 class="mt-4">Base de Datos:</h5>
+                            <div class="data-flow">
+                                <h6><i class="fas fa-database text-info me-2"></i>Colecciones MongoDB</h6>
+                                <div class="row text-center">
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <i class="fas fa-users fa-2x text-primary mb-2"></i>
+                                                <h6>Clientes</h6>
+                                                <small>Datos personales y de contacto</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <i class="fas fa-money-bill-wave fa-2x text-success mb-2"></i>
+                                                <h6>Préstamos</h6>
+                                                <small>Información del crédito otorgado</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <i class="fas fa-receipt fa-2x text-warning mb-2"></i>
+                                                <h6>Pagos</h6>
+                                                <small>Registro de abonos realizados</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Flujo de Datos -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-info text-white">
+                            <h3 class="card-title mb-0"><i class="fas fa-project-diagram me-2"></i>Flujo de Datos</h3>
+                        </div>
+                        <div class="card-body">
+                            <h5>Ciclo de Vida de un Préstamo:</h5>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-primary"></div>
+                                    <div class="timeline-content">
+                                        <h6>1. Registro del Cliente</h6>
+                                        <p>Se recopilan datos personales: nombre, apellido, teléfono, email, dirección.</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-success"></div>
+                                    <div class="timeline-content">
+                                        <h6>2. Creación del Préstamo</h6>
+                                        <p>Se define: capital inicial, plazo, frecuencia de pago, tasa de interés, condiciones de mora.</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-warning"></div>
+                                    <div class="timeline-content">
+                                        <h6>3. Registro de Pagos</h6>
+                                        <p>El administrador registra manualmente cada pago con fecha, monto y comprobante.</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-danger"></div>
+                                    <div class="timeline-content">
+                                        <h6>4. Cálculos Automáticos</h6>
+                                        <p>El sistema calcula automáticamente intereses, saldo pendiente y métricas financieras.</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-secondary"></div>
+                                    <div class="timeline-content">
+                                        <h6>5. Estado de Cuenta</h6>
+                                        <p>El cliente puede visualizar en tiempo real el estado de su préstamo.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fórmulas Matemáticas -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-warning text-dark">
+                            <h3 class="card-title mb-0"><i class="fas fa-calculator me-2"></i>Fórmulas Matemáticas</h3>
+                        </div>
+                        <div class="card-body">
+                            <h5>Cálculos Principales:</h5>
+
+                            <h6 class="mt-4">1. Pago Esperado por Cuota</h6>
+                            <div class="formula-box">
+                                <strong>Pago Esperado = (Capital / Plazo) + Interés Programado</strong>
+                            </div>
+                            <p><strong>Donde:</strong></p>
+                            <ul>
+                                <li><span class="highlight">Capital</span> = Monto inicial del préstamo</li>
+                                <li><span class="highlight">Plazo</span> = Número total de cuotas (cada 15 días)</li>
+                                <li><span class="highlight">Interés Programado</span> = (Capital × Tasa de Interés × 1/24)</li>
+                            </ul>
+                            <p><em>Frecuencia de pago fija: cada 15 días</em></p>
+
+                            <h6 class="mt-4">2. Interés Quincenal</h6>
+                            <div class="formula-box">
+                                <strong>Interés Quincenal = Capital × (Tasa de Interés / 100) × (1/24)</strong>
+                            </div>
+                            <p>Nota: Se utiliza 24 períodos por año (365 días / 15 días ≈ 24.33)</p>
+
+                            <h6 class="mt-4">3. Saldo Actual</h6>
+                            <div class="formula-box">
+                                <strong>Saldo Actual = Capital Inicial - Σ(Abonos)</strong>
+                            </div>
+                            <p>Donde Σ(Abonos) es la suma de todos los pagos realizados, excluyendo intereses y moras.</p>
+
+                            <h6 class="mt-4">4. Total Pagado</h6>
+                            <div class="formula-box">
+                                <strong>Total Pagado = Σ(Pagos)</strong>
+                            </div>
+
+                            <h6 class="mt-4">5. Interés Acumulado</h6>
+                            <div class="formula-box">
+                                <strong>Interés Acumulado = Σ(Intereses Registrados)</strong>
+                            </div>
+
+                            <h6 class="mt-4">6. Atraso Acumulado</h6>
+                            <div class="formula-box">
+                                <strong>Atraso Acumulado = Σ(Moras)</strong>
+                            </div>
+
+                            <h6 class="mt-4">7. Total a Pagar</h6>
+                            <div class="formula-box">
+                                <strong>Total a Pagar = Capital + Intereses + Atrasos</strong>
+                            </div>
+
+                            <h6 class="mt-4">8. Diferencia</h6>
+                            <div class="formula-box">
+                                <strong>Diferencia = Total a Pagar - Total Pagado</strong>
+                            </div>
+                            <p class="text-muted">Un valor positivo indica deuda pendiente, cero indica préstamo pagado.</p>
+                        </div>
+                    </div>
+
+                    <!-- Relaciones de Datos -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-danger text-white">
+                            <h3 class="card-title mb-0"><i class="fas fa-link me-2"></i>Relaciones de Datos</h3>
+                        </div>
+                        <div class="card-body">
+                            <h5>Interconexiones del Sistema:</h5>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Cliente → Préstamo</h6>
+                                    <p>Un cliente puede tener múltiples préstamos. Cada préstamo está vinculado a un cliente específico mediante <code>cliente_id</code>.</p>
+
+                                    <h6 class="mt-3">Préstamo → Pagos</h6>
+                                    <p>Un préstamo puede tener múltiples pagos registrados. Cada pago está vinculado a un préstamo mediante <code>prestamo_id</code>.</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Usuario → Acciones</h6>
+                                    <p>Los administradores pueden registrar pagos y modificar datos. Cada acción queda auditada con el <code>registrado_por</code>.</p>
+
+                                    <h6 class="mt-3">Estados Dinámicos</h6>
+                                    <p>Los cálculos se actualizan automáticamente con cada pago registrado, manteniendo la integridad de los datos.</p>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info mt-4">
+                                <i class="fas fa-lightbulb me-2"></i>
+                                <strong>Integridad de Datos:</strong> Todas las relaciones están protegidas por claves foráneas y validaciones automáticas para garantizar la consistencia del sistema.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Seguridad y Privacidad -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-dark text-white">
+                            <h3 class="card-title mb-0"><i class="fas fa-lock me-2"></i>Seguridad y Privacidad</h3>
+                        </div>
+                        <div class="card-body">
+                            <h5>Protección de Datos:</h5>
+                            <ul>
+                                <li><strong>Autenticación JWT:</strong> Tokens seguros para validar sesiones</li>
+                                <li><strong>Encriptación de Contraseñas:</strong> bcrypt para almacenamiento seguro</li>
+                                <li><strong>Control de Acceso:</strong> Roles diferenciados (Admin/User)</li>
+                                <li><strong>Auditoría:</strong> Registro de todas las acciones realizadas</li>
+                                <li><strong>Validación de Datos:</strong> Verificación de integridad en cada operación</li>
+                            </ul>
+
+                            <h5 class="mt-4">Compromiso con la Transparencia:</h5>
+                            <p>Publicamos este documento para que nuestros usuarios comprendan exactamente cómo operamos. La confianza se basa en la claridad, no en la opacidad.</p>
+                        </div>
+                    </div>
+
+                    <!-- Contacto -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-secondary text-white">
+                            <h3 class="card-title mb-0"><i class="fas fa-envelope me-2"></i>¿Dudas o Comentarios?</h3>
+                        </div>
+                        <div class="card-body text-center">
+                            <p>Si tienes alguna pregunta sobre cómo funciona el sistema o necesitas aclaraciones adicionales, no dudes en contactarnos.</p>
+                            <p><strong>Estamos comprometidos con la transparencia y la satisfacción de nuestros usuarios.</strong></p>
+                            <a href="login.html" class="btn btn-primary btn-lg">
+                                <i class="fas fa-sign-in-alt me-2"></i>Acceder al Sistema
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="bg-dark text-white py-4">
+            <div class="container text-center">
+                <p>&copy; 2024 Sistema de Préstamos. Todos los derechos reservados.</p>
+                <p class="mb-0">Comprometidos con la transparencia y la confianza</p>
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <style>
+            .timeline {
+                position: relative;
+                padding-left: 30px;
+            }
+            .timeline::before {
+                content: '';
+                position: absolute;
+                left: 15px;
+                top: 0;
+                bottom: 0;
+                width: 2px;
+                background: #007bff;
+            }
+            .timeline-item {
+                position: relative;
+                margin-bottom: 20px;
+            }
+            .timeline-marker {
+                position: absolute;
+                left: -22px;
+                top: 0;
+                width: 14px;
+                height: 14px;
+                border-radius: 50%;
+                border: 2px solid #fff;
+            }
+            .timeline-content {
+                background: #f8f9fa;
+                padding: 15px;
+                border-radius: 5px;
+            }
+        </style>
+    </body>
+</html>

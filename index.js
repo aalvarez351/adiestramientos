@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -71,16 +71,39 @@ connectDB();
 async function createAdminUser() {
   const db = client.db('test');
   const users = db.collection('users');
-  const admin = await users.findOne({ email: 'aalvarez351@gmail.com' });
-  if (!admin) {
+
+  // Create course admin
+  const courseAdmin = await users.findOne({ email: 'aalvarez351@gmail.com' });
+  if (!courseAdmin) {
     const hashedPassword = await bcrypt.hash('Lentesdesol*', 10);
     await users.insertOne({
       email: 'aalvarez351@gmail.com',
       password: hashedPassword,
       role: 'admin',
-      name: 'Admin User'
+      name: 'Admin Cursos',
+      portal: 'courses'
     });
-    console.log('Admin user created');
+    console.log('Course admin user created');
+  }
+
+  // Create or update loan admin
+  const loanAdmin = await users.findOne({ email: 'carlosmoto@gmail.com' });
+  if (!loanAdmin) {
+    const hashedPassword = await bcrypt.hash('carlosmoto1234', 10);
+    await users.insertOne({
+      email: 'carlosmoto@gmail.com',
+      password: hashedPassword,
+      role: 'administradores2',
+      name: 'Admin Préstamos'
+    });
+    console.log('Loan admin user created');
+  } else if (loanAdmin.role !== 'administradores2') {
+    // Update existing user to correct role
+    await users.updateOne(
+      { email: 'carlosmoto@gmail.com' },
+      { $set: { role: 'administradores2', name: 'Admin Préstamos' }, $unset: { portal: 1 } }
+    );
+    console.log('Loan admin user updated');
   }
 }
 
@@ -100,6 +123,46 @@ const requireAdmin = (req, res, next) => {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin access required' });
   next();
 };
+
+const requireLoanAdmin = (req, res, next) => {
+  if (req.user.role !== 'administradores2') return res.status(403).json({ error: 'Loan admin access required' });
+  next();
+};
+
+// Helper function to calculate loan metrics
+function calculateLoanMetrics(loan, payments = []) {
+  const capital = loan.capital_inicial;
+  const tasaInteres = loan.tasa_interes / 100; // Convert to decimal
+  const plazo = loan.plazo;
+
+  // Interest calculation for 15-day periods: 24 periods per year (365/15 ≈ 24.33)
+  const interesQuincenal = capital * tasaInteres / 24;
+  const pagoEsperado = (capital / plazo) + interesQuincenal;
+
+  let totalPagado = 0;
+  let interesAcumulado = 0;
+  let atrasoAcumulado = 0;
+
+  payments.forEach(payment => {
+    totalPagado += payment.monto;
+    if (payment.tipo === 'interes') interesAcumulado += payment.monto;
+    if (payment.tipo === 'mora') atrasoAcumulado += payment.monto;
+  });
+
+  const saldoActual = capital - (totalPagado - interesAcumulado - atrasoAcumulado);
+  const totalAPagar = capital + interesAcumulado + atrasoAcumulado;
+  const diferencia = totalAPagar - totalPagado;
+
+  return {
+    pago_esperado: pagoEsperado,
+    total_pagado: totalPagado,
+    interes_acumulado: interesAcumulado,
+    atraso_acumulado: atrasoAcumulado,
+    saldo_actual: saldoActual,
+    total_a_pagar: totalAPagar,
+    diferencia: diferencia
+  };
+}
 
 app.get('/', (req, res) => {
   res.json({
@@ -187,6 +250,7 @@ app.post('/login', async (req, res) => {
       token,
       role: user.role,
       name: user.name,
+      portal: user.portal || 'courses',
       message: 'Login exitoso'
     });
   } catch (err) {
@@ -289,6 +353,177 @@ app.get('/courses', async (req, res) => {
     }
   ];
   res.json(courses);
+});
+
+// Loan Management API Endpoints
+
+// Clientes
+app.get('/api/clientes', authenticateToken, requireLoanAdmin, async (req, res) => {
+  try {
+    const db = client.db('test');
+    const clientes = await db.collection('clientes').find({}).toArray();
+    res.json(clientes);
+  } catch (err) {
+    res.status(500).json({ error: 'Error retrieving clients' });
+  }
+});
+
+app.post('/api/clientes', authenticateToken, requireLoanAdmin, async (req, res) => {
+  try {
+    const { nombre, apellido, telefono, email, direccion, tipo = 'individual' } = req.body;
+    const db = client.db('test');
+    const result = await db.collection('clientes').insertOne({
+      nombre, apellido, telefono, email, direccion, tipo,
+      fecha_registro: new Date()
+    });
+    res.status(201).json({ id: result.insertedId });
+  } catch (err) {
+    res.status(500).json({ error: 'Error creating client' });
+  }
+});
+
+app.put('/api/clientes/:id', authenticateToken, requireLoanAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+    const db = client.db('test');
+    await db.collection('clientes').updateOne(
+      { _id: new ObjectId(id) },
+      { $set: updates }
+    );
+    res.json({ message: 'Client updated' });
+  } catch (err) {
+    res.status(500).json({ error: 'Error updating client' });
+  }
+});
+
+// Préstamos
+app.get('/api/prestamos', authenticateToken, async (req, res) => {
+  try {
+    const db = client.db('test');
+    const prestamos = await db.collection('prestamos').find({}).toArray();
+
+    // Calculate metrics for each loan
+    for (let loan of prestamos) {
+      const payments = await db.collection('pagos').find({ prestamo_id: loan._id }).toArray();
+      loan.metrics = calculateLoanMetrics(loan, payments);
+    }
+
+    res.json(prestamos);
+  } catch (err) {
+    res.status(500).json({ error: 'Error retrieving loans' });
+  }
+});
+
+app.post('/api/prestamos', authenticateToken, requireLoanAdmin, async (req, res) => {
+  try {
+    const { cliente_id, capital_inicial, plazo, frecuencia_pago, tasa_interes, condiciones_mora } = req.body;
+    const db = client.db('test');
+    const result = await db.collection('prestamos').insertOne({
+      cliente_id: new ObjectId(cliente_id),
+      capital_inicial: parseFloat(capital_inicial),
+      plazo: parseInt(plazo),
+      frecuencia_pago,
+      tasa_interes: parseFloat(tasa_interes),
+      condiciones_mora,
+      estado: 'activo',
+      fecha_creacion: new Date(),
+      saldo_actual: parseFloat(capital_inicial),
+      total_pagado: 0,
+      interes_acumulado: 0,
+      atraso_acumulado: 0
+    });
+    res.status(201).json({ id: result.insertedId });
+  } catch (err) {
+    res.status(500).json({ error: 'Error creating loan' });
+  }
+});
+
+// Pagos
+app.get('/api/pagos', authenticateToken, async (req, res) => {
+  try {
+    const db = client.db('test');
+    const pagos = await db.collection('pagos').find({}).sort({ fecha: -1 }).toArray();
+    res.json(pagos);
+  } catch (err) {
+    res.status(500).json({ error: 'Error retrieving payments' });
+  }
+});
+
+app.post('/api/pagos', authenticateToken, requireLoanAdmin, async (req, res) => {
+  try {
+    const { prestamo_id, fecha, monto, tipo = 'pago', comprobante } = req.body;
+    const db = client.db('test');
+
+    // Insert payment
+    const result = await db.collection('pagos').insertOne({
+      prestamo_id: new ObjectId(prestamo_id),
+      fecha: new Date(fecha),
+      monto: parseFloat(monto),
+      tipo,
+      comprobante,
+      registrado_por: req.user.id,
+      fecha_registro: new Date()
+    });
+
+    // Update loan metrics
+    const loan = await db.collection('prestamos').findOne({ _id: new ObjectId(prestamo_id) });
+    const payments = await db.collection('pagos').find({ prestamo_id: new ObjectId(prestamo_id) }).toArray();
+    const metrics = calculateLoanMetrics(loan, payments);
+
+    await db.collection('prestamos').updateOne(
+      { _id: new ObjectId(prestamo_id) },
+      { $set: {
+        saldo_actual: metrics.saldo_actual,
+        total_pagado: metrics.total_pagado,
+        interes_acumulado: metrics.interes_acumulado,
+        atraso_acumulado: metrics.atraso_acumulado,
+        estado: metrics.saldo_actual <= 0 ? 'pagado' : 'activo'
+      }}
+    );
+
+    res.status(201).json({ id: result.insertedId });
+  } catch (err) {
+    res.status(500).json({ error: 'Error recording payment' });
+  }
+});
+
+// User loan endpoints
+app.get('/api/user/prestamos', authenticateToken, async (req, res) => {
+  try {
+    const db = client.db('test');
+    const userEmail = req.user.email;
+    const client = await db.collection('clientes').findOne({ email: userEmail });
+    if (!client) return res.json([]);
+
+    const prestamos = await db.collection('prestamos').find({ cliente_id: client._id }).toArray();
+
+    for (let loan of prestamos) {
+      const payments = await db.collection('pagos').find({ prestamo_id: loan._id }).toArray();
+      loan.metrics = calculateLoanMetrics(loan, payments);
+    }
+
+    res.json(prestamos);
+  } catch (err) {
+    res.status(500).json({ error: 'Error retrieving user loans' });
+  }
+});
+
+app.get('/api/user/pagos', authenticateToken, async (req, res) => {
+  try {
+    const db = client.db('test');
+    const userEmail = req.user.email;
+    const client = await db.collection('clientes').findOne({ email: userEmail });
+    if (!client) return res.json([]);
+
+    const loanIds = await db.collection('prestamos').find({ cliente_id: client._id }, { projection: { _id: 1 } }).toArray();
+    const prestamoIds = loanIds.map(l => l._id);
+
+    const pagos = await db.collection('pagos').find({ prestamo_id: { $in: prestamoIds } }).sort({ fecha: -1 }).toArray();
+    res.json(pagos);
+  } catch (err) {
+    res.status(500).json({ error: 'Error retrieving user payments' });
+  }
 });
 
 // Middleware de logging
