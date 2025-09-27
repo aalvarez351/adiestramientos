@@ -149,7 +149,7 @@ router.get('/api/dashboard/charts', async (req, res) => {
 router.get('/api/dashboard/recent-loans', async (req, res) => {
     try {
         const limit = parseInt(req.query.limit) || 10;
-        const db = client.db('test');
+        const db = client.db('reposeidosdb');
         
         const recentLoans = await db.collection('prestamos').aggregate([
             {
