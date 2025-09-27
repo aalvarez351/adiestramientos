@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes con Paginación</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>Reportes Detallados</h5>
+                <div>
+                    <select id="rowsPerPage" class="form-select form-select-sm" style="width: auto;">
+                        <option value="10">10 por página</option>
+                        <option value="25" selected>25 por página</option>
+                        <option value="50">50 por página</option>
+                        <option value="100">100 por página</option>
+                    </select>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover" id="detailedReportsTable">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Capital Otorgado</th>
+                                <th>Total Pagado</th>
+                                <th>Saldo Pendiente</th>
+                                <th>Interés Acumulado</th>
+                                <th>Atrasos</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="detailedReportsTableBody">
+                            <!-- Los datos se cargarán aquí -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Controles de paginación -->
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div>
+                        <span id="pageInfo" class="text-muted"></span>
+                    </div>
+                    <nav>
+                        <ul class="pagination pagination-sm mb-0" id="pagination">
+                            <!-- Los botones de paginación se generarán aquí -->
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos de la tabla (extraídos del HTML original)
+        const tableData = [
+            {cliente: "Yizca Anónimo", capital: "$100", pagado: "$40", saldo: "$60", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Hidalina, Moy", capital: "$100", pagado: "$100", saldo: "$0", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Rafa Anónimo", capital: "$1815", pagado: "$330", saldo: "$1485", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Yarelis Anónimo", capital: "$575", pagado: "$100", saldo: "$475", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Narsisa, Mario", capital: "$50", pagado: "$50", saldo: "$0", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Narsisa, Moises", capital: "$550", pagado: "$350", saldo: "$200", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Narsisa, Leg Eduardo", capital: "$150", pagado: "$110", saldo: "$40", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Narsisa, Jhonatan", capital: "$60", pagado: "$40", saldo: "$20", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Narsisa, Josue", capital: "$450", pagado: "$270", saldo: "$180", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Narsisa, Erasmo", capital: "$755", pagado: "$550", saldo: "$205", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Narsisa, Elias", capital: "$70", pagado: "$40", saldo: "$30", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Narsisa, Edwar", capital: "$200", pagado: "$160", saldo: "$40", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Narsisa, Fontaner", capital: "$140", pagado: "$140", saldo: "$0", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Narsisa Anónimo", capital: "$420", pagado: "$125", saldo: "$295", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Narsisa, Astrid", capital: "$170", pagado: "$140", saldo: "$30", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Narsisa, Armando", capital: "$140", pagado: "$140", saldo: "$0", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Marlene Anónimo", capital: "$180", pagado: "$100", saldo: "$80", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Keysi Anónimo", capital: "$60", pagado: "$10", saldo: "$50", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Karoline Hrm", capital: "$210", pagado: "$85", saldo: "$125", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Joset, Yara", capital: "$90", pagado: "$75", saldo: "$15", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Joset, Yolanda", capital: "$75", pagado: "$45", saldo: "$30", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Joset, Raul", capital: "$50", pagado: "$0", saldo: "$50", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Joset, Jhonatan", capital: "$45", pagado: "$45", saldo: "$0", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Joset, Josue", capital: "$20", pagado: "$20", saldo: "$0", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Joset, Rebeca", capital: "$50", pagado: "$0", saldo: "$50", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Joset, keysi", capital: "$760", pagado: "$710", saldo: "$50", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Joset, Eliodoro", capital: "$55", pagado: "$55", saldo: "$0", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Joset, Ester", capital: "$80", pagado: "$0", saldo: "$80", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Joset, Irichel", capital: "$115", pagado: "$10", saldo: "$105", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Joset, Eduardo", capital: "$100", pagado: "$0", saldo: "$100", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Joset, Carlos", capital: "$200", pagado: "$175", saldo: "$25", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Javier Nestle", capital: "$520", pagado: "$520", saldo: "$0", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Jose Martinez", capital: "$350", pagado: "$150", saldo: "$200", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Gento Anónimo", capital: "$300", pagado: "$240", saldo: "$60", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Ivet Cf", capital: "$150", pagado: "$150", saldo: "$0", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Evelio Anónimo", capital: "$240", pagado: "$145", saldo: "$95", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Elia, Alfonso", capital: "$100", pagado: "$30", saldo: "$70", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Elia, Jose", capital: "$360", pagado: "$160", saldo: "$200", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Benancio Anónimo", capital: "$100", pagado: "$100", saldo: "$0", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Cristian Anónimo", capital: "$920", pagado: "$920", saldo: "$0", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Yovanca Mrd", capital: "$490", pagado: "$450", saldo: "$40", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Alexis Farm", capital: "$260", pagado: "$60", saldo: "$200", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Arboleda Crn", capital: "$570", pagado: "$420", saldo: "$150", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Yarisel Anónimo", capital: "$300", pagado: "$190", saldo: "$110", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Maria Grd, Tio", capital: "$470", pagado: "$320", saldo: "$150", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Marco Anónimo", capital: "$60", pagado: "$60", saldo: "$0", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Macario Pnd", capital: "$390", pagado: "$135", saldo: "$255", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Maria Grd , Hrm", capital: "$250", pagado: "$250", saldo: "$0", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Erick Clara", capital: "$100", pagado: "$100", saldo: "$0", interes: "$0", atrasos: "$0", estado: "activo"},
+            {cliente: "Fatima, Michael", capital: "$150", pagado: "$0", saldo: "$150", interes: "$0", atrasos: "$0", estado: "activo"}
+        ];
+
+        let currentPage = 1;
+        let rowsPerPage = 25;
+
+        function renderTable() {
+            const tbody = document.getElementById('detailedReportsTableBody');
+            const startIndex = (currentPage - 1) * rowsPerPage;
+            const endIndex = startIndex + rowsPerPage;
+            const pageData = tableData.slice(startIndex, endIndex);
+
+            tbody.innerHTML = pageData.map(row => `
+                <tr>
+                    <td>${row.cliente}</td>
+                    <td>${row.capital}</td>
+                    <td>${row.pagado}</td>
+                    <td>${row.saldo}</td>
+                    <td>${row.interes}</td>
+                    <td>${row.atrasos}</td>
+                    <td><span class="badge bg-success">${row.estado}</span></td>
+                </tr>
+            `).join('');
+
+            updatePageInfo();
+            renderPagination();
+        }
+
+        function updatePageInfo() {
+            const startIndex = (currentPage - 1) * rowsPerPage + 1;
+            const endIndex = Math.min(currentPage * rowsPerPage, tableData.length);
+            document.getElementById('pageInfo').textContent = 
+                `Mostrando ${startIndex}-${endIndex} de ${tableData.length} registros`;
+        }
+
+        function renderPagination() {
+            const totalPages = Math.ceil(tableData.length / rowsPerPage);
+            const pagination = document.getElementById('pagination');
+            
+            let paginationHTML = '';
+            
+            // Botón anterior
+            paginationHTML += `
+                <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="changePage(${currentPage - 1})">Anterior</a>
+                </li>
+            `;
+            
+            // Números de página
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+                    paginationHTML += `
+                        <li class="page-item ${i === currentPage ? 'active' : ''}">
+                            <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
+                        </li>
+                    `;
+                } else if (i === currentPage - 3 || i === currentPage + 3) {
+                    paginationHTML += '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                }
+            }
+            
+            // Botón siguiente
+            paginationHTML += `
+                <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="changePage(${currentPage + 1})">Siguiente</a>
+                </li>
+            `;
+            
+            pagination.innerHTML = paginationHTML;
+        }
+
+        function changePage(page) {
+            const totalPages = Math.ceil(tableData.length / rowsPerPage);
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                renderTable();
+            }
+        }
+
+        // Event listener para cambiar filas por página
+        document.getElementById('rowsPerPage').addEventListener('change', function() {
+            rowsPerPage = parseInt(this.value);
+            currentPage = 1;
+            renderTable();
+        });
+
+        // Inicializar tabla
+        renderTable();
+    </script>
+</body>
+</html>

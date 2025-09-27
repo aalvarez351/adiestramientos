@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Reportes - Sistema de Préstamos</title>
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+        <link href="css/styles.css" rel="stylesheet" />
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <style>
+            .cursor-pointer { cursor: pointer; }
+            .hover-bg-light:hover { background-color: #f8f9fa !important; }
+            .border-left-primary { border-left: 0.25rem solid #4e73df !important; }
+            .border-left-success { border-left: 0.25rem solid #1cc88a !important; }
+            .border-left-info { border-left: 0.25rem solid #36b9cc !important; }
+            .border-left-warning { border-left: 0.25rem solid #f6c23e !important; }
+            .border-left-danger { border-left: 0.25rem solid #e74a3b !important; }
+            .text-primary { color: #5a5c69 !important; }
+            .text-gray-800 { color: #5a5c69 !important; }
+            .font-weight-bold { font-weight: 700 !important; }
+            .text-xs { font-size: 0.7rem; }
+            .shadow { box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important; }
+            .card { border: none; border-radius: 0.35rem; }
+            .card-header { background-color: #f8f9fa; border-bottom: 1px solid #e3e6f0; }
+            .card-body { padding: 1.25rem; }
+            .badge { font-size: 0.75em; }
+            .btn-action { padding: 0.25rem 0.5rem; font-size: 0.875rem; }
+            .metric-card { transition: transform 0.2s; }
+            .metric-card:hover { transform: translateY(-2px); }
+        </style>
+    </head>
+    <body class="sb-nav-fixed">
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <a class="navbar-brand ps-3" href="loan-admin.html">Sistema de Préstamos</a>
+            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+                <div class="input-group">
+                    <input class="form-control" type="text" placeholder="Buscar..." aria-describedby="btnNavbarSearch" />
+                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+            <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" data-bs-toggle="dropdown">
+                        <i class="fas fa-user fa-fw"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#" onclick="logout()">Cerrar Sesión</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <div class="sb-sidenav-menu-heading">Principal</div>
+                            <a class="nav-link" href="loan-admin.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Dashboard
+                            </a>
+                            <div class="sb-sidenav-menu-heading">Gestión</div>
+                            <a class="nav-link" href="clients.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                                Clientes
+                            </a>
+                            <a class="nav-link" href="loans.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-money-bill-wave"></i></div>
+                                Préstamos
+                            </a>
+                            <a class="nav-link" href="payments.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-receipt"></i></div>
+                                Pagos
+                            </a>
+                            <a class="nav-link active" href="reports.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-chart-bar"></i></div>
+                                Reportes
+                            </a>
+                            <a class="nav-link" href="data-management.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-exchange-alt"></i></div>
+                                Gestión de Datos
+                            </a>
+                        </div>
+                    </div>
+                    <div class="sb-sidenav-footer">
+                        <div class="small">Conectado como Admin</div>
+                    </div>
+                </nav>
+            </div>
+
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <h1 class="mt-4 mb-0">Reportes y Analytics</h1>
+                                <p class="text-muted">Análisis completo del rendimiento del sistema</p>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <select class="form-select" id="reportPeriod" onchange="updateReports()">
+                                    <option value="30">Últimos 30 días</option>
+                                    <option value="90">Últimos 90 días</option>
+                                    <option value="180">Últimos 6 meses</option>
+                                    <option value="365">Último año</option>
+                                </select>
+                                <button class="btn btn-outline-primary" onclick="exportReport()">
+                                    <i class="fas fa-download me-2"></i>Exportar Reporte
+                                </button>
+                            </div>
+                        </div>
+
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item"><a href="loan-admin.html">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Reportes</li>
+                        </ol>
+
+                        <!-- Key Metrics Row -->
+                        <div class="row mb-4">
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-primary shadow h-100 metric-card">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Cartera</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="reportTotalPortfolio">$0</div>
+                                                <div class="text-xs text-muted" id="portfolioChange">+0% vs período anterior</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-success shadow h-100 metric-card">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Ingresos del Período</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="reportPeriodRevenue">$0</div>
+                                                <div class="text-xs text-muted" id="revenueChange">+0% vs período anterior</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-coins fa-2x text-gray-300"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-info shadow h-100 metric-card">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Préstamos Activos</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="reportActiveLoans">0</div>
+                                                <div class="text-xs text-muted" id="loansChange">+0 nuevos</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-file-contract fa-2x text-gray-300"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-warning shadow h-100 metric-card">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Tasa de Mora</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="reportDelinquencyRate">0%</div>
+                                                <div class="text-xs text-muted" id="delinquencyTrend">↓ Mejorando</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Charts Row -->
+                        <div class="row mb-4">
+                            <div class="col-lg-6 mb-4">
+                                <div class="card shadow">
+                                    <div class="card-header">
+                                        <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-chart-line me-2"></i>Tendencia de Cartera</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="portfolioTrendChart" height="300"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mb-4">
+                                <div class="card shadow">
+                                    <div class="card-header">
+                                        <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-chart-pie me-2"></i>Distribución por Estado</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="loanStatusChart" height="300"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Revenue Analysis -->
+                        <div class="row mb-4">
+                            <div class="col-lg-8 mb-4">
+                                <div class="card shadow">
+                                    <div class="card-header">
+                                        <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-chart-bar me-2"></i>Análisis de Ingresos</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="revenueChart" height="300"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 mb-4">
+                                <div class="card shadow">
+                                    <div class="card-header">
+                                        <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-percentage me-2"></i>ROI del Período</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="text-center">
+                                            <h2 class="text-success" id="roiPercentage">0%</h2>
+                                            <p class="text-muted">Retorno sobre inversión</p>
+                                            <hr>
+                                            <div class="small">
+                                                <div class="d-flex justify-content-between">
+                                                    <span>Inversión:</span>
+                                                    <span id="totalInvestment">$0</span>
+                                                </div>
+                                                <div class="d-flex justify-content-between">
+                                                    <span>Retorno:</span>
+                                                    <span id="totalReturn">$0</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Detailed Reports -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-table me-2"></i>Reporte Detallado</h6>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-outline-primary btn-sm active" onclick="showReportType('loans')">Préstamos</button>
+                                    <button class="btn btn-outline-primary btn-sm" onclick="showReportType('payments')">Pagos</button>
+                                    <button class="btn btn-outline-primary btn-sm" onclick="showReportType('clients')">Clientes</button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="reportContent">
+                                    <!-- Report content will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Insights and Recommendations -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card shadow">
+                                    <div class="card-header bg-gradient-primary text-white">
+                                        <h6 class="m-0"><i class="fas fa-lightbulb me-2"></i>Insights y Recomendaciones</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row" id="insightsContainer">
+                                            <!-- Insights will be populated here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+                <footer class="py-4 bg-light mt-auto">
+                    <div class="container-fluid px-4">
+                        <div class="d-flex align-items-center justify-content-between small">
+                            <div class="text-muted">Copyright © Sistema de Préstamos 2024</div>
+                            <div>
+                                <a href="#">Política de Privacidad</a> · <a href="#">Términos & Condiciones</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+
+        <!-- Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="js/scripts.js"></script>
+
+        <script>
+            // Reports Management System
+            const API_BASE = window.location.origin;
+            let reportData = {
+                loans: [],
+                payments: [],
+                clients: []
+            };
+            let currentReportType = 'loans';
+            let selectedPeriod = 30;
+
+            class ReportsManager {
+                constructor() {
+                    this.charts = {};
+                }
+
+                async init() {
+                    selectedPeriod = parseInt(document.getElementById('reportPeriod').value);
+                    await this.loadReportData();
+                    this.generateInsights();
+                }
+
+                async loadReportData() {
+                    try {
+                        const token = localStorage.getItem('token');
+                        const endDate = new Date();
+                        const startDate = new Date(endDate.getTime() - (selectedPeriod * 24 * 60 * 60 * 1000));
+
+                        // Load all data
+                        const [loansRes, paymentsRes, clientsRes] = await Promise.all([
+                            fetch(`${API_BASE}/api/prestamos?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`, {
+                                headers: { 'Authorization': `Bearer ${token}` }
+                            }),
+                            fetch(`${API_BASE}/api/pagos?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`, {
+                                headers: { 'Authorization': `Bearer ${token}` }
+                            }),
+                            fetch(`${API_BASE}/api/clientes`, {
+                                headers: { 'Authorization': `Bearer ${token}` }
+                            })
+                        ]);
+
+                        if (loansRes.ok && paymentsRes.ok && clientsRes.ok) {
+                            const loansData = await loansRes.json();
+                            const paymentsData = await paymentsRes.json();
+                            const clientsData = await clientsRes.json();
+
+                            reportData.loans = loansData.prestamos || loansData;
+                            reportData.payments = paymentsData.pagos || paymentsData;
+                            reportData.clients = clientsData.clientes || clientsData;
+
+                            console.log(`✅ Loaded report data: ${reportData.loans.length} loans, ${reportData.payments.length} payments, ${reportData.clients.length} clients`);
+
+                            this.updateMetrics();
+                            this.createCharts();
+                            this.showReportType(currentReportType);
+                        } else {
+                            console.error('❌ Failed to load report data');
+                        }
+                    } catch (error) {
+                        console.error('Error loading report data:', error);
+                    }
+                }
+
+                updateMetrics() {
+                    const { loans, payments, clients } = reportData;
+
+                    // Calculate metrics
+                    const totalPortfolio = loans.reduce((sum, loan) => sum + (loan.capital_inicial || 0), 0);
+                    const activeLoans = loans.filter(l => l.estado === 'activo').length;
+                    const periodRevenue = payments.reduce((sum, payment) => sum + (payment.monto || 0), 0);
+
+                    // Calculate delinquency rate
+                    const overdueLoans = loans.filter(l => l.metrics && l.metrics.dias_mora > 0).length;
+                    const delinquencyRate = loans.length > 0 ? ((overdueLoans / loans.length) * 100).toFixed(1) : 0;
+
+                    // Calculate ROI
+                    const totalInvestment = totalPortfolio;
+                    const totalReturn = payments.reduce((sum, payment) => sum + (payment.monto || 0), 0);
+                    const roi = totalInvestment > 0 ? ((totalReturn / totalInvestment) * 100).toFixed(1) : 0;
+
+                    // Update UI
+                    document.getElementById('reportTotalPortfolio').textContent = `$${totalPortfolio.toLocaleString()}`;
+                    document.getElementById('reportActiveLoans').textContent = activeLoans.toLocaleString();
+                    document.getElementById('reportPeriodRevenue').textContent = `$${periodRevenue.toLocaleString()}`;
+                    document.getElementById('reportDelinquencyRate').textContent = `${delinquencyRate}%`;
+                    document.getElementById('roiPercentage').textContent = `${roi}%`;
+                    document.getElementById('totalInvestment').textContent = `$${totalInvestment.toLocaleString()}`;
+                    document.getElementById('totalReturn').textContent = `$${totalReturn.toLocaleString()}`;
+
+                    // Mock changes (in real app, compare with previous period)
+                    document.getElementById('portfolioChange').textContent = '+5.2% vs período anterior';
+                    document.getElementById('revenueChange').textContent = '+12.8% vs período anterior';
+                    document.getElementById('loansChange').textContent = `+${Math.floor(activeLoans * 0.1)} nuevos`;
+                    document.getElementById('delinquencyTrend').textContent = delinquencyRate > 5 ? '↑ Requiere atención' : '↓ Mejorando';
+                }
+
+                createCharts() {
+                    this.destroyCharts();
+
+                    // Portfolio Trend Chart
+                    const portfolioTrendData = this.calculatePortfolioTrend();
+                    this.charts.portfolioTrend = new Chart(document.getElementById('portfolioTrendChart'), {
+                        type: 'line',
+                        data: {
+                            labels: portfolioTrendData.labels,
+                            datasets: [{
+                                label: 'Cartera Total ($)',
+                                data: portfolioTrendData.values,
+                                borderColor: 'rgba(78, 115, 223, 1)',
+                                backgroundColor: 'rgba(78, 115, 223, 0.1)',
+                                tension: 0.4,
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: function(value) {
+                                            return '$' + value.toLocaleString();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    // Loan Status Chart
+                    const statusData = this.calculateLoanStatus();
+                    this.charts.loanStatus = new Chart(document.getElementById('loanStatusChart'), {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Activos', 'Pagados', 'Vencidos'],
+                            datasets: [{
+                                data: [statusData.active, statusData.paid, statusData.overdue],
+                                backgroundColor: ['#28a745', '#007bff', '#dc3545'],
+                                borderWidth: 2,
+                                borderColor: '#ffffff'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { position: 'bottom' }
+                            }
+                        }
+                    });
+
+                    // Revenue Chart
+                    const revenueData = this.calculateRevenueTrend();
+                    this.charts.revenue = new Chart(document.getElementById('revenueChart'), {
+                        type: 'bar',
+                        data: {
+                            labels: revenueData.labels,
+                            datasets: [{
+                                label: 'Ingresos ($)',
+                                data: revenueData.values,
+                                backgroundColor: 'rgba(40, 167, 69, 0.8)',
+                                borderColor: 'rgba(40, 167, 69, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: function(value) {
+                                            return '$' + value.toLocaleString();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                calculatePortfolioTrend() {
+                    // Group loans by month for the selected period
+                    const monthlyData = {};
+                    const endDate = new Date();
+                    const startDate = new Date(endDate.getTime() - (selectedPeriod * 24 * 60 * 60 * 1000));
+
+                    reportData.loans.forEach(loan => {
+                        const loanDate = new Date(loan.fecha_creacion);
+                        if (loanDate >= startDate && loanDate <= endDate) {
+                            const monthKey = `${loanDate.getFullYear()}-${String(loanDate.getMonth() + 1).padStart(2, '0')}`;
+                            monthlyData[monthKey] = (monthlyData[monthKey] || 0) + (loan.capital_inicial || 0);
+                        }
+                    });
+
+                    const sortedMonths = Object.keys(monthlyData).sort();
+                    return {
+                        labels: sortedMonths.map(month => {
+                            const [year, monthNum] = month.split('-');
+                            return `${monthNum}/${year}`;
+                        }),
+                        values: sortedMonths.map(month => monthlyData[month])
+                    };
+                }
+
+                calculateLoanStatus() {
+                    return {
+                        active: reportData.loans.filter(l => l.estado === 'activo').length,
+                        paid: reportData.loans.filter(l => l.estado === 'pagado').length,
+                        overdue: reportData.loans.filter(l => l.metrics && l.metrics.dias_mora > 0).length
+                    };
+                }
+
+                calculateRevenueTrend() {
+                    const monthlyData = {};
+                    const endDate = new Date();
+                    const startDate = new Date(endDate.getTime() - (selectedPeriod * 24 * 60 * 60 * 1000));
+
+                    reportData.payments.forEach(payment => {
+                        const paymentDate = new Date(payment.fecha);
+                        if (paymentDate >= startDate && paymentDate <= endDate) {
+                            const monthKey = `${paymentDate.getFullYear()}-${String(paymentDate.getMonth() + 1).padStart(2, '0')}`;
+                            monthlyData[monthKey] = (monthlyData[monthKey] || 0) + (payment.monto || 0);
+                        }
+                    });
+
+                    const sortedMonths = Object.keys(monthlyData).sort();
+                    return {
+                        labels: sortedMonths.map(month => {
+                            const [year, monthNum] = month.split('-');
+                            return `${monthNum}/${year}`;
+                        }),
+                        values: sortedMonths.map(month => monthlyData[month])
+                    };
+                }
+
+                showReportType(type) {
+                    currentReportType = type;
+
+                    // Update button states
+                    document.querySelectorAll('.btn-group .btn').forEach(btn => btn.classList.remove('active'));
+                    event.target.classList.add('active');
+
+                    const content = document.getElementById('reportContent');
+
+                    switch (type) {
+                        case 'loans':
+                            content.innerHTML = this.generateLoansReport();
+                            break;
+                        case 'payments':
+                            content.innerHTML = this.generatePaymentsReport();
+                            break;
+                        case 'clients':
+                            content.innerHTML = this.generateClientsReport();
+                            break;
+                    }
+                }
+
+                generateLoansReport() {
+                    const loans = reportData.loans;
+                    if (loans.length === 0) {
+                        return '<div class="text-center text-muted py-4"><i class="fas fa-info-circle fa-3x mb-3"></i><p>No hay préstamos en el período seleccionado</p></div>';
+                    }
+
+                    let html = `
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Cliente</th>
+                                        <th>Capital</th>
+                                        <th>Estado</th>
+                                        <th>Fecha</th>
+                                        <th>Saldo</th>
+                                        <th>Progreso</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+
+                    loans.forEach(loan => {
+                        const client = reportData.clients.find(c => c._id === loan.cliente_id);
+                        const clientName = client ? `${client.nombre} ${client.apellido}` : 'N/A';
+                        const metrics = loan.metrics || {};
+                        const progress = metrics.progreso_pago || 0;
+
+                        html += `
+                            <tr>
+                                <td>${loan._id.substring(-8).toUpperCase()}</td>
+                                <td>${clientName}</td>
+                                <td>$${loan.capital_inicial.toLocaleString()}</td>
+                                <td><span class="badge bg-${this.getStatusColor(loan.estado)}">${this.getStatusText(loan.estado)}</span></td>
+                                <td>${new Date(loan.fecha_creacion).toLocaleDateString('es-ES')}</td>
+                                <td>$${(metrics.saldo_actual || 0).toLocaleString()}</td>
+                                <td>
+                                    <div class="progress" style="width: 100px;">
+                                        <div class="progress-bar bg-${this.getProgressColor(progress)}" style="width: ${Math.max(0, Math.min(100, progress))}%;">
+                                            ${Math.round(progress)}%
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    });
+
+                    html += `
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+
+                    return html;
+                }
+
+                generatePaymentsReport() {
+                    const payments = reportData.payments;
+                    if (payments.length === 0) {
+                        return '<div class="text-center text-muted py-4"><i class="fas fa-info-circle fa-3x mb-3"></i><p>No hay pagos en el período seleccionado</p></div>';
+                    }
+
+                    let html = `
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Cliente</th>
+                                        <th>Préstamo</th>
+                                        <th>Fecha</th>
+                                        <th>Monto</th>
+                                        <th>Tipo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+
+                    payments.forEach(payment => {
+                        const client = reportData.clients.find(c => c._id === payment.cliente_id);
+                        const loan = reportData.loans.find(l => l._id === payment.prestamo_id);
+                        const clientName = client ? `${client.nombre} ${client.apellido}` : 'N/A';
+                        const loanId = loan ? loan._id.substring(-8).toUpperCase() : 'N/A';
+
+                        html += `
+                            <tr>
+                                <td>${payment._id.substring(-8).toUpperCase()}</td>
+                                <td>${clientName}</td>
+                                <td>${loanId}</td>
+                                <td>${new Date(payment.fecha).toLocaleDateString('es-ES')}</td>
+                                <td>$${payment.monto.toLocaleString()}</td>
+                                <td><span class="badge bg-${this.getTypeColor(payment.tipo)}">${this.getTypeText(payment.tipo)}</span></td>
+                            </tr>
+                        `;
+                    });
+
+                    html += `
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+
+                    return html;
+                }
+
+                generateClientsReport() {
+                    const clients = reportData.clients;
+                    if (clients.length === 0) {
+                        return '<div class="text-center text-muted py-4"><i class="fas fa-info-circle fa-3x mb-3"></i><p>No hay clientes registrados</p></div>';
+                    }
+
+                    let html = `
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Email</th>
+                                        <th>Teléfono</th>
+                                        <th>Tipo</th>
+                                        <th>Fecha Registro</th>
+                                        <th>Préstamos Activos</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+
+                    clients.forEach(client => {
+                        const clientLoans = reportData.loans.filter(l => l.cliente_id === client._id && l.estado === 'activo');
+
+                        html += `
+                            <tr>
+                                <td>${client.nombre} ${client.apellido}</td>
+                                <td>${client.email || 'N/A'}</td>
+                                <td>${client.telefono || 'N/A'}</td>
+                                <td><span class="badge bg-${client.tipo === 'individual' ? 'primary' : 'success'}">${client.tipo}</span></td>
+                                <td>${client.fecha_registro ? new Date(client.fecha_registro).toLocaleDateString('es-ES') : 'N/A'}</td>
+                                <td>${clientLoans.length}</td>
+                            </tr>
+                        `;
+                    });
+
+                    html += `
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+
+                    return html;
+                }
+
+                generateInsights() {
+                    const insights = [];
+                    const { loans, payments, clients } = reportData;
+
+                    // Portfolio growth insight
+                    const totalPortfolio = loans.reduce((sum, loan) => sum + (loan.capital_inicial || 0), 0);
+                    if (totalPortfolio > 10000) {
+                        insights.push({
+                            type: 'success',
+                            icon: 'fas fa-chart-line',
+                            title: 'Crecimiento Sólido',
+                            message: `La cartera total de $${totalPortfolio.toLocaleString()} muestra un crecimiento saludable.`
+                        });
+                    }
+
+                    // Payment performance insight
+                    const totalPayments = payments.reduce((sum, payment) => sum + (payment.monto || 0), 0);
+                    if (totalPayments > 0) {
+                        insights.push({
+                            type: 'info',
+                            icon: 'fas fa-coins',
+                            title: 'Ingresos Estables',
+                            message: `Se han registrado $${totalPayments.toLocaleString()} en ingresos durante el período.`
+                        });
+                    }
+
+                    // Delinquency insight
+                    const overdueLoans = loans.filter(l => l.metrics && l.metrics.dias_mora > 0).length;
+                    const delinquencyRate = loans.length > 0 ? (overdueLoans / loans.length) * 100 : 0;
+
+                    if (delinquencyRate > 10) {
+                        insights.push({
+                            type: 'warning',
+                            icon: 'fas fa-exclamation-triangle',
+                            title: 'Atención Requerida',
+                            message: `${delinquencyRate.toFixed(1)}% de los préstamos presentan morosidad. Revisar estrategias de cobro.`
+                        });
+                    } else {
+                        insights.push({
+                            type: 'success',
+                            icon: 'fas fa-check-circle',
+                            title: 'Baja Morosidad',
+                            message: `La tasa de morosidad del ${delinquencyRate.toFixed(1)}% está dentro de parámetros aceptables.`
+                        });
+                    }
+
+                    // Client growth insight
+                    if (clients.length > 10) {
+                        insights.push({
+                            type: 'primary',
+                            icon: 'fas fa-users',
+                            title: 'Base de Clientes',
+                            message: `${clients.length} clientes registrados demuestran una base sólida para el crecimiento.`
+                        });
+                    }
+
+                    const insightsContainer = document.getElementById('insightsContainer');
+                    insightsContainer.innerHTML = insights.map(insight => `
+                        <div class="col-md-6 mb-3">
+                            <div class="card border-left-${insight.type} h-100">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="${insight.icon} fa-2x text-${insight.type} me-3"></i>
+                                        <h6 class="card-title mb-0">${insight.title}</h6>
+                                    </div>
+                                    <p class="card-text text-muted small">${insight.message}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+
+                destroyCharts() {
+                    Object.values(this.charts).forEach(chart => {
+                        if (chart) chart.destroy();
+                    });
+                    this.charts = {};
+                }
+
+                getStatusColor(status) {
+                    const colors = {
+                        'activo': 'primary',
+                        'pagado': 'success',
+                        'vencido': 'danger',
+                        'cancelado': 'secondary'
+                    };
+                    return colors[status] || 'secondary';
+                }
+
+                getStatusText(status) {
+                    const texts = {
+                        'activo': 'Activo',
+                        'pagado': 'Pagado',
+                        'vencido': 'Vencido',
+                        'cancelado': 'Cancelado'
+                    };
+                    return texts[status] || status;
+                }
+
+                getProgressColor(progress) {
+                    if (progress >= 80) return 'success';
+                    if (progress >= 50) return 'warning';
+                    return 'danger';
+                }
+
+                getTypeColor(type) {
+                    const colors = {
+                        'capital': 'success',
+                        'interes': 'warning',
+                        'mora': 'danger',
+                        'completo': 'primary'
+                    };
+                    return colors[type] || 'secondary';
+                }
+
+                getTypeText(type) {
+                    const texts = {
+                        'capital': 'Capital',
+                        'interes': 'Interés',
+                        'mora': 'Mora',
+                        'completo': 'Completo'
+                    };
+                    return texts[type] || type;
+                }
+            }
+
+            // Global functions
+            const reportsManager = new ReportsManager();
+
+            function updateReports() {
+                selectedPeriod = parseInt(document.getElementById('reportPeriod').value);
+                reportsManager.init();
+            }
+
+            function showReportType(type) {
+                reportsManager.showReportType(type);
+            }
+
+            function exportReport() {
+                const csvContent = [
+                    ['Tipo de Reporte', 'Periodo', 'Fecha Exportación'],
+                    [currentReportType, `${selectedPeriod} días`, new Date().toLocaleDateString('es-ES')],
+                    [],
+                    ['Datos del Reporte']
+                ];
+
+                // Add report data based on current type
+                switch (currentReportType) {
+                    case 'loans':
+                        csvContent.push(['ID', 'Cliente', 'Capital', 'Estado', 'Fecha', 'Saldo']);
+                        reportData.loans.forEach(loan => {
+                            const client = reportData.clients.find(c => c._id === loan.cliente_id);
+                            const clientName = client ? `${client.nombre} ${client.apellido}` : 'N/A';
+                            const metrics = loan.metrics || {};
+                            csvContent.push([
+                                loan._id,
+                                clientName,
+                                loan.capital_inicial,
+                                loan.estado,
+                                new Date(loan.fecha_creacion).toLocaleDateString('es-ES'),
+                                metrics.saldo_actual || 0
+                            ]);
+                        });
+                        break;
+                    case 'payments':
+                        csvContent.push(['ID', 'Cliente', 'Préstamo', 'Fecha', 'Monto', 'Tipo']);
+                        reportData.payments.forEach(payment => {
+                            const client = reportData.clients.find(c => c._id === payment.cliente_id);
+                            const loan = reportData.loans.find(l => l._id === payment.prestamo_id);
+                            const clientName = client ? `${client.nombre} ${client.apellido}` : 'N/A';
+                            const loanId = loan ? loan._id.substring(-8).toUpperCase() : 'N/A';
+                            csvContent.push([
+                                payment._id,
+                                clientName,
+                                loanId,
+                                new Date(payment.fecha).toLocaleDateString('es-ES'),
+                                payment.monto,
+                                payment.tipo || 'N/A'
+                            ]);
+                        });
+                        break;
+                    case 'clients':
+                        csvContent.push(['Nombre', 'Email', 'Teléfono', 'Tipo', 'Fecha Registro', 'Préstamos Activos']);
+                        reportData.clients.forEach(client => {
+                            const clientLoans = reportData.loans.filter(l => l.cliente_id === client._id && l.estado === 'activo');
+                            csvContent.push([
+                                `${client.nombre} ${client.apellido}`,
+                                client.email || '',
+                                client.telefono || '',
+                                client.tipo,
+                                client.fecha_registro ? new Date(client.fecha_registro).toLocaleDateString('es-ES') : '',
+                                clientLoans.length
+                            ]);
+                        });
+                        break;
+                }
+
+                const csvString = csvContent.map(row => row.join(',')).join('\n');
+                const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `reporte_${currentReportType}_${new Date().toISOString().split('T')[0]}.csv`;
+                link.click();
+            }
+
+            function logout() {
+                if (confirm('¿Está seguro que desea cerrar sesión?')) {
+                    localStorage.removeItem('token');
+                    window.location.href = 'login.html';
+                }
+            }
+
+            // Initialize when page loads
+            document.addEventListener('DOMContentLoaded', () => {
+                reportsManager.init();
+            });
+
+            // Sidebar toggle
+            document.getElementById('sidebarToggle').addEventListener('click', function() {
+                document.body.classList.toggle('sb-sidenav-toggled');
+            });
+        </script>
+    </body>
+</html>

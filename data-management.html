@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Gestión de Datos - Sistema de Préstamos</title>
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+        <link href="css/styles.css" rel="stylesheet" />
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <script src="js/pagination.js"></script>
+    </head>
+    <body class="sb-nav-fixed">
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <!-- Navbar Brand-->
+            <a class="navbar-brand ps-3" href="loan-admin.html">Sistema de Préstamos</a>
+            <!-- Sidebar Toggle-->
+            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+            <!-- Navbar Search-->
+            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+                <div class="input-group">
+                    <input class="form-control" type="text" placeholder="Buscar..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+            <!-- Navbar-->
+            <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#" onclick="logout()">Cerrar Sesión</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <div class="sb-sidenav-menu-heading">Principal</div>
+                            <a class="nav-link" href="loan-admin.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Dashboard
+                            </a>
+                            <a class="nav-link" href="client-search.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-search"></i></div>
+                                Buscar Cliente
+                            </a>
+                            <div class="sb-sidenav-menu-heading">Gestión</div>
+                            <a class="nav-link" href="data-management.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-exchange-alt"></i></div>
+                                Gestión de Datos
+                            </a>
+                        </div>
+                    </div>
+                    <div class="sb-sidenav-footer">
+                        <div class="small">Conectado como Admin</div>
+                    </div>
+                </nav>
+            </div>
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <h1 class="mt-4 mb-0">Gestión de Datos</h1>
+                                <p class="text-muted">Importación y Exportación de Información</p>
+                            </div>
+                            <div class="text-end">
+                                <small class="text-muted d-block">Última actualización</small>
+                                <small class="text-muted" id="lastUpdate"></small>
+                            </div>
+                        </div>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item"><a href="loan-admin.html">Dashboard</a></li>
+                            <li class="breadcrumb-item active">
+                                <i class="fas fa-exchange-alt me-1"></i>Gestión de Datos
+                            </li>
+                        </ol>
+
+                        <!-- Import/Export Section -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-exchange-alt me-1"></i>
+                                Importar/Exportar Datos
+                            </div>
+                            <div class="card-body">
+                                <!-- Import Section -->
+                                <div class="mb-3">
+                                    <h6><i class="fas fa-upload me-2"></i>Importar desde Excel</h6>
+                                    <p class="text-muted small">Selecciona un archivo Excel con estructura compatible (hoja "Datos") para importar los datos</p>
+
+                                    <div class="mb-3">
+                                        <label for="excelFilename" class="form-label">Nombre del archivo Excel</label>
+                                        <input type="text" class="form-control" id="excelFilename" value="30deagosto.xlsx" placeholder="Ej: 30deagosto.xlsx">
+                                        <div class="form-text">Ingrese el nombre del archivo Excel que está en el servidor</div>
+                                    </div>
+
+                                    <button class="btn btn-success" onclick="importExcelData()">
+                                        <i class="fas fa-file-excel me-2"></i>Importar Datos Excel
+                                    </button>
+                                    <div id="importStatus" class="mt-2" style="display: none;">
+                                        <div class="alert alert-info">
+                                            <i class="fas fa-spinner fa-spin me-2"></i>
+                                            Procesando importación...
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr>
+
+                                <!-- Export Section -->
+                                <div>
+                                    <h6><i class="fas fa-download me-2"></i>Exportar Datos</h6>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <button class="btn btn-outline-primary w-100" onclick="exportClients()">
+                                                <i class="fas fa-users me-2"></i>Exportar Clientes
+                                            </button>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <button class="btn btn-outline-success w-100" onclick="exportLoans()">
+                                                <i class="fas fa-money-bill-wave me-2"></i>Exportar Préstamos
+                                            </button>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <button class="btn btn-outline-warning w-100" onclick="exportPayments()">
+                                                <i class="fas fa-receipt me-2"></i>Exportar Pagos
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Data Status Section -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Estado de los Datos
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="card bg-primary text-white">
+                                            <div class="card-body text-center">
+                                                <i class="fas fa-users fa-2x mb-2"></i>
+                                                <h5>Total Clientes</h5>
+                                                <h3 id="totalClients">0</h3>
+                                                <button class="btn btn-light btn-sm mt-2" onclick="previewData('clients')">
+                                                    <i class="fas fa-eye me-1"></i>Vista Previa
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card bg-success text-white">
+                                            <div class="card-body text-center">
+                                                <i class="fas fa-money-bill-wave fa-2x mb-2"></i>
+                                                <h5>Total Préstamos</h5>
+                                                <h3 id="totalLoans">0</h3>
+                                                <button class="btn btn-light btn-sm mt-2" onclick="previewData('loans')">
+                                                    <i class="fas fa-eye me-1"></i>Vista Previa
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card bg-warning text-white">
+                                            <div class="card-body text-center">
+                                                <i class="fas fa-receipt fa-2x mb-2"></i>
+                                                <h5>Total Pagos</h5>
+                                                <h3 id="totalPayments">0</h3>
+                                                <button class="btn btn-light btn-sm mt-2" onclick="previewData('payments')">
+                                                    <i class="fas fa-eye me-1"></i>Vista Previa
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card bg-info text-white">
+                                            <div class="card-body text-center">
+                                                <i class="fas fa-calendar fa-2x mb-2"></i>
+                                                <h5>Última Importación</h5>
+                                                <h6 id="lastImport">-</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Data Preview Section -->
+                        <div class="card mb-4" id="dataPreviewSection" style="display: none;">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-table me-1"></i>
+                                    Vista Previa de Datos - <span id="previewTitle"></span>
+                                </div>
+                                <button class="btn btn-outline-secondary btn-sm" onclick="hideDataPreview()">
+                                    <i class="fas fa-times"></i> Cerrar
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div id="dataPreviewSearchBar"></div>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover" id="dataPreviewTable">
+                                        <thead class="table-dark" id="dataPreviewHeader">
+                                        </thead>
+                                        <tbody id="dataPreviewBody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Instructions Section -->
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-question-circle me-1"></i>
+                                Instrucciones de Uso
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6><i class="fas fa-upload text-success me-2"></i>Importación de Datos</h6>
+                                        <ul class="list-unstyled">
+                                            <li><i class="fas fa-check text-success me-2"></i>El archivo Excel debe tener una hoja llamada "Datos"</li>
+                                            <li><i class="fas fa-check text-success me-2"></i>Las columnas deben seguir el formato estándar</li>
+                                            <li><i class="fas fa-check text-success me-2"></i>El archivo debe estar en el servidor</li>
+                                            <li><i class="fas fa-exclamation-triangle text-warning me-2"></i>La importación eliminará datos existentes</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6><i class="fas fa-download text-primary me-2"></i>Exportación de Datos</h6>
+                                        <ul class="list-unstyled">
+                                            <li><i class="fas fa-check text-success me-2"></i>Los datos se exportan en formato CSV</li>
+                                            <li><i class="fas fa-check text-success me-2"></i>Compatible con Excel y Google Sheets</li>
+                                            <li><i class="fas fa-check text-success me-2"></i>Incluye todos los campos disponibles</li>
+                                            <li><i class="fas fa-info-circle text-info me-2"></i>El archivo se descarga automáticamente</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                <footer class="py-4 bg-light mt-auto">
+                    <div class="container-fluid px-4">
+                        <div class="d-flex align-items-center justify-content-between small">
+                            <div class="text-muted">Copyright &copy; Sistema de Préstamos 2024</div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="js/scripts.js"></script>
+        <script>
+            let allClients = [];
+            let allLoans = [];
+            let allPayments = [];
+            let dataPreviewPagination;
+
+            document.addEventListener('DOMContentLoaded', function() {
+                validateLoanAdminAccess();
+                loadDataStats();
+            });
+
+            function validateLoanAdminAccess() {
+                const token = localStorage.getItem('token');
+                const role = localStorage.getItem('role');
+
+                if (!token || role !== 'administradores2') {
+                    alert('Acceso no autorizado. Debes iniciar sesión como administrador de préstamos.');
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                document.getElementById('lastUpdate').textContent = new Date().toLocaleString('es-ES');
+            }
+
+            async function loadDataStats() {
+                try {
+                    const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://conectandopersonas.life';
+                    
+                    const [clientsRes, loansRes, paymentsRes] = await Promise.all([
+                        fetch(`${API_BASE}/api/clientes?limit=1`, {
+                            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                        }),
+                        fetch(`${API_BASE}/api/prestamos?limit=1`, {
+                            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                        }),
+                        fetch(`${API_BASE}/api/pagos?limit=1`, {
+                            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                        })
+                    ]);
+
+                    if (clientsRes.ok) {
+                        const data = await clientsRes.json();
+                        const totalClients = data.pagination ? data.pagination.total : 0;
+                        document.getElementById('totalClients').textContent = totalClients.toLocaleString();
+                    }
+
+                    if (loansRes.ok) {
+                        const data = await loansRes.json();
+                        const totalLoans = data.pagination ? data.pagination.total : 0;
+                        document.getElementById('totalLoans').textContent = totalLoans.toLocaleString();
+                    }
+
+                    if (paymentsRes.ok) {
+                        const data = await paymentsRes.json();
+                        const totalPayments = data.pagination ? data.pagination.total : 0;
+                        document.getElementById('totalPayments').textContent = totalPayments.toLocaleString();
+                    }
+
+                    // Simular última importación
+                    const lastImport = localStorage.getItem('lastImport');
+                    if (lastImport) {
+                        document.getElementById('lastImport').textContent = new Date(lastImport).toLocaleDateString('es-ES');
+                    }
+
+                } catch (err) {
+                    console.error('Error loading data stats:', err);
+                }
+            }
+
+            async function importExcelData() {
+                const filename = document.getElementById('excelFilename').value.trim();
+
+                if (!filename) {
+                    alert('❌ Por favor, ingrese el nombre del archivo Excel');
+                    return;
+                }
+
+                if (!confirm(`¿Está seguro de que desea importar datos desde "${filename}"? Esto eliminará todos los datos existentes y puede tomar varios minutos.`)) {
+                    return;
+                }
+
+                const importBtn = document.querySelector('[onclick="importExcelData()"]');
+                const originalHtml = importBtn.innerHTML;
+                const importStatus = document.getElementById('importStatus');
+
+                // Mostrar estado de carga
+                importBtn.disabled = true;
+                importBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Importando...';
+                importStatus.style.display = 'block';
+                importStatus.innerHTML = `
+                    <div class="alert alert-info">
+                        <i class="fas fa-spinner fa-spin me-2"></i>
+                        Procesando importación masiva de "${filename}"... Esto puede tomar varios minutos.
+                        <div class="progress mt-2">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div>
+                        </div>
+                    </div>
+                `;
+
+                try {
+                    const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://conectandopersonas.life';
+                    const response = await fetch(`${API_BASE}/api/import-excel`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ filename: filename })
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        importStatus.innerHTML = `
+                            <div class="alert alert-success">
+                                <i class="fas fa-check-circle me-2"></i>
+                                ${result.message}
+                            </div>
+                        `;
+                        
+                        // Guardar fecha de última importación
+                        localStorage.setItem('lastImport', new Date().toISOString());
+                        
+                        // Recargar estadísticas después de un breve delay
+                        setTimeout(() => {
+                            loadDataStats();
+                        }, 3000);
+                        
+                        setTimeout(() => {
+                            importStatus.style.display = 'none';
+                        }, 8000);
+                    } else {
+                        importStatus.innerHTML = `
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Error: ${result.error || 'Error desconocido'}
+                            </div>
+                        `;
+                        setTimeout(() => {
+                            importStatus.style.display = 'none';
+                        }, 5000);
+                    }
+                } catch (err) {
+                    console.error('Error importing Excel:', err);
+                    importStatus.innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Error de conexión al importar datos
+                        </div>
+                    `;
+                    setTimeout(() => {
+                        importStatus.style.display = 'none';
+                    }, 5000);
+                } finally {
+                    // Restaurar botón
+                    importBtn.disabled = false;
+                    importBtn.innerHTML = originalHtml;
+                }
+            }
+
+            async function exportClients() {
+                try {
+                    const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://conectandopersonas.life';
+                    const response = await fetch(`${API_BASE}/api/clientes?limit=10000`, {
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        const clients = data.clientes || data;
+                        
+                        const csvContent = "data:text/csv;charset=utf-8," +
+                            "Nombre,Apellido,Email,Teléfono,Dirección,Tipo,Fecha Registro\n" +
+                            clients.map(client =>
+                                `"${client.nombre}","${client.apellido}","${client.email}","${client.telefono}","${client.direccion}","${client.tipo}","${new Date(client.fecha_registro).toLocaleDateString('es-ES')}"`
+                            ).join("\n");
+
+                        const encodedUri = encodeURI(csvContent);
+                        const link = document.createElement("a");
+                        link.setAttribute("href", encodedUri);
+                        link.setAttribute("download", `clientes_${new Date().toISOString().split('T')[0]}.csv`);
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    }
+                } catch (err) {
+                    console.error('Error exporting clients:', err);
+                    alert('Error al exportar clientes');
+                }
+            }
+
+            async function exportLoans() {
+                try {
+                    const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://conectandopersonas.life';
+                    const response = await fetch(`${API_BASE}/api/prestamos?limit=10000`, {
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        const loans = data.prestamos || data;
+                        
+                        const csvContent = "data:text/csv;charset=utf-8," +
+                            "Cliente,Capital Inicial,Plazo,Frecuencia,Tasa Interes,Estado,Saldo Actual,Total Pagado,Fecha Creacion\n" +
+                            loans.map(loan => {
+                                const clientName = loan.cliente_info ?
+                                    `${loan.cliente_info.nombre} ${loan.cliente_info.apellido}` :
+                                    `Cliente ID: ${loan.cliente_id}`;
+                                return `"${clientName}","${loan.capital_inicial}","${loan.plazo}","${loan.frecuencia_pago}","${loan.tasa_interes}","${loan.estado}","${loan.metrics?.saldo_actual || 0}","${loan.metrics?.total_pagado || 0}","${new Date(loan.fecha_creacion).toLocaleDateString('es-ES')}"`;
+                            }).join("\n");
+
+                        const encodedUri = encodeURI(csvContent);
+                        const link = document.createElement("a");
+                        link.setAttribute("href", encodedUri);
+                        link.setAttribute("download", `prestamos_${new Date().toISOString().split('T')[0]}.csv`);
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    }
+                } catch (err) {
+                    console.error('Error exporting loans:', err);
+                    alert('Error al exportar préstamos');
+                }
+            }
+
+            async function exportPayments() {
+                try {
+                    const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://conectandopersonas.life';
+                    const response = await fetch(`${API_BASE}/api/pagos?limit=10000`, {
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        const payments = data.pagos || data;
+                        
+                        const csvContent = "data:text/csv;charset=utf-8," +
+                            "Cliente,Fecha,Monto,Tipo,Comprobante\n" +
+                            payments.map(payment => {
+                                const clientName = payment.cliente_info ?
+                                    `${payment.cliente_info.nombre} ${payment.cliente_info.apellido}` :
+                                    `Préstamo ID: ${payment.prestamo_id}`;
+                                return `"${clientName}","${new Date(payment.fecha).toLocaleDateString('es-ES')}","${payment.monto}","${payment.tipo}","${payment.comprobante || ''}"`;
+                            }).join("\n");
+
+                        const encodedUri = encodeURI(csvContent);
+                        const link = document.createElement("a");
+                        link.setAttribute("href", encodedUri);
+                        link.setAttribute("download", `pagos_${new Date().toISOString().split('T')[0]}.csv`);
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    }
+                } catch (err) {
+                    console.error('Error exporting payments:', err);
+                    alert('Error al exportar pagos');
+                }
+            }
+
+            async function previewData(type) {
+                const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://conectandopersonas.life';
+                let endpoint, title, headers, renderCallback, searchCallback;
+                
+                switch(type) {
+                    case 'clients':
+                        endpoint = '/api/clientes?limit=100';
+                        title = 'Clientes';
+                        headers = ['Nombre', 'Apellido', 'Email', 'Teléfono', 'Tipo', 'Fecha Registro'];
+                        renderCallback = renderClientsPreview;
+                        searchCallback = searchClientsPreview;
+                        break;
+                    case 'loans':
+                        endpoint = '/api/prestamos?limit=100';
+                        title = 'Préstamos';
+                        headers = ['Cliente', 'Capital', 'Estado', 'Saldo Actual', 'Fecha Creación'];
+                        renderCallback = renderLoansPreview;
+                        searchCallback = searchLoansPreview;
+                        break;
+                    case 'payments':
+                        endpoint = '/api/pagos?limit=100';
+                        title = 'Pagos';
+                        headers = ['Cliente', 'Fecha', 'Monto', 'Tipo', 'Comprobante'];
+                        renderCallback = renderPaymentsPreview;
+                        searchCallback = searchPaymentsPreview;
+                        break;
+                }
+                
+                try {
+                    const response = await fetch(`${API_BASE}${endpoint}`, {
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        const records = data.clientes || data.prestamos || data.pagos || data;
+                        
+                        // Configurar encabezados
+                        document.getElementById('previewTitle').textContent = title;
+                        const headerRow = headers.map(h => `<th>${h}</th>`).join('');
+                        document.getElementById('dataPreviewHeader').innerHTML = `<tr>${headerRow}</tr>`;
+                        
+                        // Configurar paginación
+                        if (!dataPreviewPagination) {
+                            dataPreviewPagination = new PaginationManager('dataPreviewTable', {
+                                pageSize: 10,
+                                renderCallback: renderCallback,
+                                searchCallback: searchCallback,
+                                labels: { records: 'registros' }
+                            });
+                            
+                            document.getElementById('dataPreviewSearchBar').innerHTML = 
+                                dataPreviewPagination.createSearchBar('Buscar en vista previa...');
+                        } else {
+                            dataPreviewPagination.renderCallback = renderCallback;
+                            dataPreviewPagination.searchCallback = searchCallback;
+                        }
+                        
+                        dataPreviewPagination.setData(records);
+                        document.getElementById('dataPreviewSection').style.display = 'block';
+                        
+                        // Scroll to preview
+                        document.getElementById('dataPreviewSection').scrollIntoView({ behavior: 'smooth' });
+                    }
+                } catch (err) {
+                    console.error('Error loading preview data:', err);
+                    alert('Error al cargar vista previa');
+                }
+            }
+            
+            function hideDataPreview() {
+                document.getElementById('dataPreviewSection').style.display = 'none';
+            }
+            
+            function renderClientsPreview(clients) {
+                const tbody = document.getElementById('dataPreviewBody');
+                
+                if (clients.length === 0) {
+                    PaginationUtils.renderEmptyTable(tbody, 6, 'fas fa-users', 'No hay clientes para mostrar');
+                    return;
+                }
+                
+                tbody.innerHTML = '';
+                clients.forEach(client => {
+                    const row = `
+                        <tr>
+                            <td>${client.nombre}</td>
+                            <td>${client.apellido}</td>
+                            <td>${client.email}</td>
+                            <td>${client.telefono}</td>
+                            <td>${PaginationUtils.createStatusBadge(client.tipo)}</td>
+                            <td>${PaginationUtils.formatDate(client.fecha_registro)}</td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            }
+            
+            function searchClientsPreview(clients, searchTerm) {
+                return clients.filter(client => 
+                    client.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    client.apellido.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    client.email.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            }
+            
+            function renderLoansPreview(loans) {
+                const tbody = document.getElementById('dataPreviewBody');
+                
+                if (loans.length === 0) {
+                    PaginationUtils.renderEmptyTable(tbody, 5, 'fas fa-money-bill-wave', 'No hay préstamos para mostrar');
+                    return;
+                }
+                
+                tbody.innerHTML = '';
+                loans.forEach(loan => {
+                    const clientName = loan.cliente_info ?
+                        `${loan.cliente_info.nombre} ${loan.cliente_info.apellido}` :
+                        `Cliente ID: ${loan.cliente_id}`;
+                    const row = `
+                        <tr>
+                            <td>${clientName}</td>
+                            <td>${PaginationUtils.formatCurrency(loan.capital_inicial)}</td>
+                            <td>${PaginationUtils.createStatusBadge(loan.estado)}</td>
+                            <td>${PaginationUtils.formatCurrency(loan.metrics?.saldo_actual || 0)}</td>
+                            <td>${PaginationUtils.formatDate(loan.fecha_creacion)}</td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            }
+            
+            function searchLoansPreview(loans, searchTerm) {
+                return loans.filter(loan => {
+                    const clientName = loan.cliente_info ?
+                        `${loan.cliente_info.nombre} ${loan.cliente_info.apellido}` :
+                        `Cliente ID: ${loan.cliente_id}`;
+                    return clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           loan.estado.toLowerCase().includes(searchTerm.toLowerCase());
+                });
+            }
+            
+            function renderPaymentsPreview(payments) {
+                const tbody = document.getElementById('dataPreviewBody');
+                
+                if (payments.length === 0) {
+                    PaginationUtils.renderEmptyTable(tbody, 5, 'fas fa-receipt', 'No hay pagos para mostrar');
+                    return;
+                }
+                
+                tbody.innerHTML = '';
+                payments.forEach(payment => {
+                    const clientName = payment.cliente_info ?
+                        `${payment.cliente_info.nombre} ${payment.cliente_info.apellido}` :
+                        `Préstamo ID: ${payment.prestamo_id}`;
+                    const row = `
+                        <tr>
+                            <td>${clientName}</td>
+                            <td>${PaginationUtils.formatDate(payment.fecha)}</td>
+                            <td>${PaginationUtils.formatCurrency(payment.monto)}</td>
+                            <td>${PaginationUtils.createStatusBadge(payment.tipo)}</td>
+                            <td>${payment.comprobante || '-'}</td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            }
+            
+            function searchPaymentsPreview(payments, searchTerm) {
+                return payments.filter(payment => {
+                    const clientName = payment.cliente_info ?
+                        `${payment.cliente_info.nombre} ${payment.cliente_info.apellido}` :
+                        `Préstamo ID: ${payment.prestamo_id}`;
+                    return clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           payment.tipo.toLowerCase().includes(searchTerm.toLowerCase());
+                });
+            }
+
+            function logout() {
+                localStorage.clear();
+                window.location.href = 'login.html';
+            }
+        </script>
+    </body>
+</html>

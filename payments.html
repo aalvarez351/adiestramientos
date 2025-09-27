@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Gestión de Pagos - Sistema de Préstamos</title>
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+        <link href="css/styles.css" rel="stylesheet" />
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <style>
+            .cursor-pointer { cursor: pointer; }
+            .hover-bg-light:hover { background-color: #f8f9fa !important; }
+            .border-left-primary { border-left: 0.25rem solid #4e73df !important; }
+            .border-left-success { border-left: 0.25rem solid #1cc88a !important; }
+            .border-left-info { border-left: 0.25rem solid #36b9cc !important; }
+            .border-left-warning { border-left: 0.25rem solid #f6c23e !important; }
+            .border-left-danger { border-left: 0.25rem solid #e74a3b !important; }
+            .text-primary { color: #5a5c69 !important; }
+            .text-gray-800 { color: #5a5c69 !important; }
+            .font-weight-bold { font-weight: 700 !important; }
+            .text-xs { font-size: 0.7rem; }
+            .shadow { box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important; }
+            .card { border: none; border-radius: 0.35rem; }
+            .card-header { background-color: #f8f9fa; border-bottom: 1px solid #e3e6f0; }
+            .card-body { padding: 1.25rem; }
+            .badge { font-size: 0.75em; }
+            .btn-action { padding: 0.25rem 0.5rem; font-size: 0.875rem; }
+        </style>
+    </head>
+    <body class="sb-nav-fixed">
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <a class="navbar-brand ps-3" href="loan-admin.html">Sistema de Préstamos</a>
+            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+                <div class="input-group">
+                    <input class="form-control" type="text" placeholder="Buscar..." aria-describedby="btnNavbarSearch" />
+                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+            <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" data-bs-toggle="dropdown">
+                        <i class="fas fa-user fa-fw"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#" onclick="logout()">Cerrar Sesión</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <div class="sb-sidenav-menu-heading">Principal</div>
+                            <a class="nav-link" href="loan-admin.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Dashboard
+                            </a>
+                            <div class="sb-sidenav-menu-heading">Gestión</div>
+                            <a class="nav-link" href="clients.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                                Clientes
+                            </a>
+                            <a class="nav-link" href="loans.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-money-bill-wave"></i></div>
+                                Préstamos
+                            </a>
+                            <a class="nav-link active" href="payments.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-receipt"></i></div>
+                                Pagos
+                            </a>
+                            <a class="nav-link" href="reports.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-chart-bar"></i></div>
+                                Reportes
+                            </a>
+                            <a class="nav-link" href="data-management.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-exchange-alt"></i></div>
+                                Gestión de Datos
+                            </a>
+                        </div>
+                    </div>
+                    <div class="sb-sidenav-footer">
+                        <div class="small">Conectado como Admin</div>
+                    </div>
+                </nav>
+            </div>
+
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <h1 class="mt-4 mb-0">Gestión de Pagos</h1>
+                                <p class="text-muted">Registro y seguimiento de pagos</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="showPaymentModal()">
+                                <i class="fas fa-plus me-2"></i>Registrar Pago
+                            </button>
+                        </div>
+
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item"><a href="loan-admin.html">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Pagos</li>
+                        </ol>
+
+                        <!-- Search and Filters -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header">
+                                <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-search me-2"></i>Buscar Pagos</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <input type="text" class="form-control" id="searchInput" placeholder="Buscar por cliente..." onkeyup="filterPayments()">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <select class="form-select" id="typeFilter" onchange="filterPayments()">
+                                            <option value="">Todos los tipos</option>
+                                            <option value="capital">Capital</option>
+                                            <option value="interes">Interés</option>
+                                            <option value="mora">Mora</option>
+                                            <option value="completo">Pago Completo</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="date" class="form-control" id="dateFrom" onchange="filterPayments()">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="date" class="form-control" id="dateTo" onchange="filterPayments()">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button class="btn btn-outline-secondary me-2" onclick="clearFilters()">
+                                            <i class="fas fa-times me-2"></i>Limpiar Filtros
+                                        </button>
+                                        <button class="btn btn-outline-primary" onclick="exportPayments()">
+                                            <i class="fas fa-download me-1"></i>Exportar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payments Table -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-receipt me-2"></i>Historial de Pagos</h6>
+                                <select class="form-select form-select-sm" id="pageSize" onchange="changePageSize()" style="width: auto;">
+                                    <option value="10">10 por página</option>
+                                    <option value="25">25 por página</option>
+                                    <option value="50">50 por página</option>
+                                </select>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="paymentsTable" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>Cliente</th>
+                                                <th>Préstamo</th>
+                                                <th>Fecha Préstamo</th>
+                                                <th>Monto Total</th>
+                                                <th>Tipo</th>
+                                                <th>Estado</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="paymentsTableBody">
+                                            <!-- Payments data will be populated here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Pagination -->
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <div id="paginationInfo" class="text-muted"></div>
+                                    <nav id="paginationControls">
+                                        <!-- Pagination controls will be populated here -->
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+                <footer class="py-4 bg-light mt-auto">
+                    <div class="container-fluid px-4">
+                        <div class="d-flex align-items-center justify-content-between small">
+                            <div class="text-muted">Copyright © Sistema de Préstamos 2024</div>
+                            <div>
+                                <a href="#">Política de Privacidad</a> · <a href="#">Términos & Condiciones</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+
+        <!-- Payment Modal -->
+        <div class="modal fade" id="paymentModal" tabindex="-1">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Registrar Pago</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="paymentForm">
+                            <!-- Client Selection -->
+                            <div class="mb-3">
+                                <label class="form-label">Buscar Cliente *</label>
+                                <input type="text" class="form-control" id="paymentClientSearch" placeholder="Buscar cliente por nombre, apellido o email..." autocomplete="off">
+                                <div id="paymentClientSearchResults" class="mt-2" style="display: none; max-height: 200px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 0.375rem; background: white; z-index: 1000; position: absolute; width: 100%;"></div>
+                                <div id="selectedPaymentClient" class="mt-2" style="display: none;">
+                                    <span class="badge bg-success">Cliente seleccionado: <span id="selectedPaymentClientName"></span></span>
+                                    <button type="button" class="btn btn-sm btn-outline-danger ms-2" onclick="clearSelectedPaymentClient()">Cambiar</button>
+                                </div>
+                            </div>
+
+                            <!-- Loan Selection -->
+                            <div class="mb-3" id="loanSelection" style="display: none;">
+                                <label class="form-label">Seleccionar Préstamo *</label>
+                                <select class="form-select" id="paymentPrestamo" required onchange="loadLoanDetails()">
+                                    <option value="">Seleccionar préstamo...</option>
+                                </select>
+                            </div>
+
+                            <!-- Payment Details -->
+                            <div class="row" id="paymentDetails" style="display: none;">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Fecha del Pago *</label>
+                                    <input type="date" class="form-control" id="paymentFecha" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Monto del Pago *</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" class="form-control" id="paymentMonto" step="0.01" min="0" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Loan Summary -->
+                            <div class="card mb-3" id="loanSummaryCard" style="display: none;">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Estado del Préstamo</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p><strong>Capital Inicial:</strong> $<span id="loanCapitalInicial">0</span></p>
+                                            <p><strong>Saldo Pendiente:</strong> $<span id="loanSaldoPendiente">0</span></p>
+                                            <p><strong>Próximo Pago:</strong> <span id="loanProximoPago">N/A</span></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><strong>Interés Pendiente:</strong> $<span id="loanInteresPendiente">0</span></p>
+                                            <p><strong>Mora Acumulada:</strong> $<span id="loanMoraAcumulada">0</span></p>
+                                            <p><strong>Días de Mora:</strong> <span id="loanDiasMora">0</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Payment Distribution Preview -->
+                            <div class="card" id="paymentDistributionCard" style="display: none;">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Distribución del Pago</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div id="paymentDistribution">
+                                        <!-- Payment distribution will be calculated here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-info me-auto" onclick="calculatePaymentDistribution()" id="calculateBtn" style="display: none;">Calcular Distribución</button>
+                        <button type="button" class="btn btn-success" onclick="savePayment()" id="savePaymentBtn" style="display: none;">Registrar Pago</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Details Modal -->
+        <div class="modal fade" id="paymentDetailsModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Detalles del Pago</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="paymentDetailsContent">
+                            <!-- Payment details will be populated here -->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="js/scripts.js"></script>
+
+        <script>
+            // Payment Management System
+            const API_BASE = window.location.origin;
+            let allPayments = [];
+            let filteredPayments = [];
+            let allClients = [];
+            let allLoans = [];
+            let currentPage = 1;
+            let pageSize = 10;
+            let selectedClient = null;
+            let selectedLoan = null;
+
+            class PaymentManager {
+                constructor() {
+                    this.currentPaymentId = null;
+                }
+
+                async init() {
+                    await this.loadClients();
+                    await this.loadLoans();
+                    await this.loadPayments();
+                    this.setupEventListeners();
+                    this.checkUrlParams();
+                }
+
+                setupEventListeners() {
+                    document.getElementById('pageSize').addEventListener('change', (e) => {
+                        pageSize = parseInt(e.target.value);
+                        currentPage = 1;
+                        this.renderPayments();
+                    });
+                }
+
+                checkUrlParams() {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const loanId = urlParams.get('loan');
+                    if (loanId) {
+                        // Pre-select loan if coming from loans page
+                        setTimeout(() => {
+                            this.preSelectLoan(loanId);
+                        }, 1000);
+                    }
+                }
+
+                async preSelectLoan(loanId) {
+                    const loan = allLoans.find(l => l._id === loanId);
+                    if (loan) {
+                        const client = allClients.find(c => c._id === loan.cliente_id);
+                        if (client) {
+                            selectClientForPayment(client);
+                            // Wait a bit for the loan selection to load
+                            setTimeout(() => {
+                                document.getElementById('paymentPrestamo').value = loanId;
+                                loadLoanDetails();
+                            }, 500);
+                        }
+                    }
+                }
+
+                async loadClients() {
+                    try {
+                        const token = localStorage.getItem('token');
+                        const response = await fetch(`${API_BASE}/api/clientes`, {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            allClients = data.clientes || data;
+                            console.log(`✅ Loaded ${allClients.length} clients`);
+                        }
+                    } catch (error) {
+                        console.error('Error loading clients:', error);
+                    }
+                }
+
+                async loadLoans() {
+                    try {
+                        const token = localStorage.getItem('token');
+                        const response = await fetch(`${API_BASE}/api/prestamos`, {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            allLoans = data.prestamos || data;
+                            console.log(`✅ Loaded ${allLoans.length} loans`);
+                        }
+                    } catch (error) {
+                        console.error('Error loading loans:', error);
+                    }
+                }
+
+                async loadPayments() {
+                    try {
+                        const token = localStorage.getItem('token');
+                        const response = await fetch(`${API_BASE}/api/pagos`, {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            allPayments = data.pagos || data;
+                            filteredPayments = [...allPayments];
+                            this.renderPayments();
+                            console.log(`✅ Loaded ${allPayments.length} payments`);
+                        } else {
+                            console.error('❌ Failed to load payments');
+                            this.showError('Error al cargar pagos');
+                        }
+                    } catch (error) {
+                        console.error('Error loading payments:', error);
+                        this.showError('Error de conexión');
+                    }
+                }
+
+                filterPayments() {
+                    const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+                    const typeFilter = document.getElementById('typeFilter').value;
+                    const dateFrom = document.getElementById('dateFrom').value;
+                    const dateTo = document.getElementById('dateTo').value;
+
+                    filteredPayments = allPayments.filter(payment => {
+                        const client = allClients.find(c => c._id === payment.cliente_id);
+                        const clientName = client ? `${client.nombre} ${client.apellido}`.toLowerCase() : '';
+
+                        const matchesSearch = !searchTerm || clientName.includes(searchTerm);
+                        const matchesType = !typeFilter || payment.tipo === typeFilter;
+
+                        let matchesDate = true;
+                        if (dateFrom || dateTo) {
+                            const paymentDate = new Date(payment.fecha);
+                            if (dateFrom) {
+                                matchesDate = matchesDate && paymentDate >= new Date(dateFrom);
+                            }
+                            if (dateTo) {
+                                matchesDate = matchesDate && paymentDate <= new Date(dateTo + 'T23:59:59');
+                            }
+                        }
+
+                        return matchesSearch && matchesType && matchesDate;
+                    });
+
+                    currentPage = 1;
+                    this.renderPayments();
+                }
+
+                clearFilters() {
+                    document.getElementById('searchInput').value = '';
+                    document.getElementById('typeFilter').value = '';
+                    document.getElementById('dateFrom').value = '';
+                    document.getElementById('dateTo').value = '';
+                    filteredPayments = [...allPayments];
+                    currentPage = 1;
+                    this.renderPayments();
+                }
+
+                renderPayments() {
+                    const tbody = document.getElementById('paymentsTableBody');
+                    const startIndex = (currentPage - 1) * pageSize;
+                    const endIndex = startIndex + pageSize;
+                    const paymentsToShow = filteredPayments.slice(startIndex, endIndex);
+
+                    if (paymentsToShow.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">No se encontraron pagos</td></tr>';
+                    } else {
+                        tbody.innerHTML = paymentsToShow.map(payment => {
+                            const client = allClients.find(c => c._id === payment.cliente_id);
+                            const loan = allLoans.find(l => l._id === payment.prestamo_id);
+                            const clientName = client ? `${client.nombre} ${client.apellido}` : 'Cliente no encontrado';
+                            const loanInfo = loan ? `$${loan.capital_inicial.toLocaleString()} - ${new Date(loan.fecha_creacion).toLocaleDateString('es-ES')}` : 'N/A';
+
+                            return `
+                                <tr>
+                                    <td><strong>${clientName}</strong></td>
+                                    <td>${loanInfo}</td>
+                                    <td>${loan ? new Date(loan.fecha_creacion).toLocaleDateString('es-ES') : 'N/A'}</td>
+                                    <td><strong>$${payment.monto.toLocaleString()}</strong></td>
+                                    <td>
+                                        <span class="badge bg-${this.getTypeColor(payment.tipo)}">
+                                            ${this.getTypeText(payment.tipo)}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-success">Procesado</span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary btn-action" onclick="viewPayment('${payment._id}')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('');
+                    }
+
+                    this.renderPagination();
+                }
+
+                renderPagination() {
+                    const totalPages = Math.ceil(filteredPayments.length / pageSize);
+                    const paginationControls = document.getElementById('paginationControls');
+                    const paginationInfo = document.getElementById('paginationInfo');
+
+                    const startItem = (currentPage - 1) * pageSize + 1;
+                    const endItem = Math.min(currentPage * pageSize, filteredPayments.length);
+                    paginationInfo.textContent = `Mostrando ${startItem} a ${endItem} de ${filteredPayments.length} pagos`;
+
+                    let paginationHtml = '<ul class="pagination pagination-sm mb-0">';
+
+                    paginationHtml += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                        <a class="page-link" href="#" onclick="changePage(${currentPage - 1})">Anterior</a>
+                    </li>`;
+
+                    const startPage = Math.max(1, currentPage - 2);
+                    const endPage = Math.min(totalPages, currentPage + 2);
+
+                    if (startPage > 1) {
+                        paginationHtml += `<li class="page-item"><a class="page-link" href="#" onclick="changePage(1)">1</a></li>`;
+                        if (startPage > 2) {
+                            paginationHtml += '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                        }
+                    }
+
+                    for (let i = startPage; i <= endPage; i++) {
+                        paginationHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}">
+                            <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
+                        </li>`;
+                    }
+
+                    if (endPage < totalPages) {
+                        if (endPage < totalPages - 1) {
+                            paginationHtml += '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                        }
+                        paginationHtml += `<li class="page-item"><a class="page-link" href="#" onclick="changePage(${totalPages})">${totalPages}</a></li>`;
+                    }
+
+                    paginationHtml += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                        <a class="page-link" href="#" onclick="changePage(${currentPage + 1})">Siguiente</a>
+                    </li>`;
+
+                    paginationHtml += '</ul>';
+                    paginationControls.innerHTML = paginationHtml;
+                }
+
+                calculatePaymentDistribution() {
+                    const loanId = document.getElementById('paymentPrestamo').value;
+                    const paymentAmount = parseFloat(document.getElementById('paymentMonto').value) || 0;
+
+                    if (!loanId || paymentAmount <= 0) {
+                        alert('Por favor seleccione un préstamo y especifique un monto válido');
+                        return;
+                    }
+
+                    const loan = allLoans.find(l => l._id === loanId);
+                    if (!loan) {
+                        alert('Préstamo no encontrado');
+                        return;
+                    }
+
+                    const metrics = loan.metrics || {};
+                    const moraAcumulada = metrics.atraso_acumulado || 0;
+                    const interesPendiente = metrics.interes_acumulado || 0;
+                    const saldoPendiente = metrics.saldo_actual || loan.capital_inicial || 0;
+
+                    // Calculate distribution
+                    let remainingAmount = paymentAmount;
+                    let distribution = {
+                        mora: 0,
+                        interes: 0,
+                        capital: 0
+                    };
+
+                    // First, pay mora
+                    if (moraAcumulada > 0 && remainingAmount > 0) {
+                        distribution.mora = Math.min(remainingAmount, moraAcumulada);
+                        remainingAmount -= distribution.mora;
+                    }
+
+                    // Then, pay interest
+                    if (interesPendiente > 0 && remainingAmount > 0) {
+                        distribution.interes = Math.min(remainingAmount, interesPendiente);
+                        remainingAmount -= distribution.interes;
+                    }
+
+                    // Finally, pay capital
+                    if (remainingAmount > 0) {
+                        distribution.capital = Math.min(remainingAmount, saldoPendiente);
+                    }
+
+                    // Display distribution
+                    const distributionHtml = `
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card border-left-danger h-100">
+                                    <div class="card-body text-center">
+                                        <h6 class="text-danger">Mora</h6>
+                                        <h4 class="text-danger">$${distribution.mora.toLocaleString()}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-left-warning h-100">
+                                    <div class="card-body text-center">
+                                        <h6 class="text-warning">Interés</h6>
+                                        <h4 class="text-warning">$${distribution.interes.toLocaleString()}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-left-success h-100">
+                                    <div class="card-body text-center">
+                                        <h6 class="text-success">Capital</h6>
+                                        <h4 class="text-success">$${distribution.capital.toLocaleString()}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="text-center">
+                            <h5>Total del Pago: <strong>$${paymentAmount.toLocaleString()}</strong></h5>
+                            <small class="text-muted">El pago se distribuirá automáticamente según las prioridades del sistema</small>
+                        </div>
+                    `;
+
+                    document.getElementById('paymentDistribution').innerHTML = distributionHtml;
+                    document.getElementById('paymentDistributionCard').style.display = 'block';
+                    document.getElementById('savePaymentBtn').style.display = 'inline-block';
+                }
+
+                async savePayment() {
+                    const formData = {
+                        prestamo_id: document.getElementById('paymentPrestamo').value,
+                        fecha: document.getElementById('paymentFecha').value,
+                        monto: document.getElementById('paymentMonto').value
+                    };
+
+                    if (!formData.prestamo_id || !formData.fecha || !formData.monto) {
+                        alert('Por favor complete todos los campos requeridos');
+                        return;
+                    }
+
+                    try {
+                        const token = localStorage.getItem('token');
+                        const response = await fetch(`${API_BASE}/api/pagos`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify(formData)
+                        });
+
+                        if (response.ok) {
+                            const result = await response.json();
+                            bootstrap.Modal.getInstance(document.getElementById('paymentModal')).hide();
+                            await this.loadPayments();
+
+                            // Show payment distribution details
+                            let distributionMessage = 'Pago registrado exitosamente\n\nDistribución del pago:\n';
+                            if (result.distribution) {
+                                result.distribution.forEach(item => {
+                                    const typeName = item.tipo === 'mora' ? 'Mora' : item.tipo === 'interes' ? 'Interés' : 'Capital';
+                                    distributionMessage += `${typeName}: $${item.monto.toLocaleString()}\n`;
+                                });
+                            }
+                            alert(distributionMessage);
+                        } else {
+                            const error = await response.json();
+                            this.showError(error.message || 'Error al registrar pago');
+                        }
+                    } catch (error) {
+                        console.error('Error saving payment:', error);
+                        this.showError('Error de conexión');
+                    }
+                }
+
+                getTypeColor(type) {
+                    const colors = {
+                        'capital': 'success',
+                        'interes': 'warning',
+                        'mora': 'danger',
+                        'completo': 'primary'
+                    };
+                    return colors[type] || 'secondary';
+                }
+
+                getTypeText(type) {
+                    const texts = {
+                        'capital': 'Capital',
+                        'interes': 'Interés',
+                        'mora': 'Mora',
+                        'completo': 'Completo'
+                    };
+                    return texts[type] || type;
+                }
+
+                showSuccess(message) {
+                    alert(message);
+                }
+
+                showError(message) {
+                    alert('Error: ' + message);
+                }
+            }
+
+            // Global functions
+            const paymentManager = new PaymentManager();
+
+            function showPaymentModal() {
+                document.getElementById('paymentForm').reset();
+                document.getElementById('selectedPaymentClient').style.display = 'none';
+                document.getElementById('loanSelection').style.display = 'none';
+                document.getElementById('paymentDetails').style.display = 'none';
+                document.getElementById('loanSummaryCard').style.display = 'none';
+                document.getElementById('paymentDistributionCard').style.display = 'none';
+                document.getElementById('calculateBtn').style.display = 'none';
+                document.getElementById('savePaymentBtn').style.display = 'none';
+                new bootstrap.Modal(document.getElementById('paymentModal')).show();
+            }
+
+            function calculatePaymentDistribution() {
+                paymentManager.calculatePaymentDistribution();
+            }
+
+            function savePayment() {
+                paymentManager.savePayment();
+            }
+
+            function viewPayment(paymentId) {
+                const payment = allPayments.find(p => p._id === paymentId);
+                if (!payment) return;
+
+                const client = allClients.find(c => c._id === payment.cliente_id);
+                const loan = allLoans.find(l => l._id === payment.prestamo_id);
+                const clientName = client ? `${client.nombre} ${client.apellido}` : 'Cliente no encontrado';
+                const loanInfo = loan ? `$${loan.capital_inicial.toLocaleString()} - ${new Date(loan.fecha_creacion).toLocaleDateString('es-ES')}` : 'N/A';
+
+                const detailsHtml = `
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Información del Pago</h5>
+                            <p><strong>ID del Pago:</strong> ${payment._id}</p>
+                            <p><strong>Cliente:</strong> ${clientName}</p>
+                            <p><strong>Préstamo:</strong> ${loanInfo}</p>
+                            <p><strong>Fecha del Pago:</strong> ${new Date(payment.fecha).toLocaleDateString('es-ES')}</p>
+                            <p><strong>Monto Total:</strong> $${payment.monto.toLocaleString()}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Distribución del Pago</h5>
+                            ${payment.distribution ? payment.distribution.map(item => `
+                                <p><strong>${item.tipo === 'mora' ? 'Mora' : item.tipo === 'interes' ? 'Interés' : 'Capital'}:</strong>
+                                   $${item.monto.toLocaleString()}</p>
+                            `).join('') : '<p class="text-muted">Distribución no disponible</p>'}
+                        </div>
+                    </div>
+                    ${payment.comprobante ? `
+                        <hr>
+                        <div class="row">
+                            <div class="col-12">
+                                <h5>Comprobante</h5>
+                                <p><strong>Número de Comprobante:</strong> ${payment.comprobante}</p>
+                            </div>
+                        </div>
+                    ` : ''}
+                `;
+
+                document.getElementById('paymentDetailsContent').innerHTML = detailsHtml;
+                new bootstrap.Modal(document.getElementById('paymentDetailsModal')).show();
+            }
+
+            function filterPayments() {
+                paymentManager.filterPayments();
+            }
+
+            function clearFilters() {
+                paymentManager.clearFilters();
+            }
+
+            function changePage(page) {
+                currentPage = page;
+                paymentManager.renderPayments();
+            }
+
+            function changePageSize() {
+                currentPage = 1;
+                paymentManager.renderPayments();
+            }
+
+            function exportPayments() {
+                const csvContent = [
+                    ['Cliente', 'Préstamo', 'Fecha Préstamo', 'Monto', 'Tipo'],
+                    ...filteredPayments.map(payment => {
+                        const client = allClients.find(c => c._id === payment.cliente_id);
+                        const loan = allLoans.find(l => l._id === payment.prestamo_id);
+                        const clientName = client ? `${client.nombre} ${client.apellido}` : 'N/A';
+                        const loanInfo = loan ? `$${loan.capital_inicial} - ${new Date(loan.fecha_creacion).toLocaleDateString('es-ES')}` : 'N/A';
+
+                        return [
+                            clientName,
+                            loanInfo,
+                            loan ? new Date(loan.fecha_creacion).toLocaleDateString('es-ES') : 'N/A',
+                            payment.monto,
+                            payment.tipo || 'N/A'
+                        ];
+                    })
+                ].map(row => row.join(',')).join('\n');
+
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `pagos_${new Date().toISOString().split('T')[0]}.csv`;
+                link.click();
+            }
+
+            // Client search functionality
+            let clientSearchTimeout;
+
+            document.getElementById('paymentClientSearch').addEventListener('input', function(e) {
+                clearTimeout(clientSearchTimeout);
+                const searchTerm = e.target.value.trim();
+
+                if (searchTerm.length < 2) {
+                    document.getElementById('paymentClientSearchResults').style.display = 'none';
+                    return;
+                }
+
+                clientSearchTimeout = setTimeout(() => {
+                    const filteredClients = allClients.filter(client =>
+                        (client.nombre && client.nombre.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                        (client.apellido && client.apellido.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                        (client.email && client.email.toLowerCase().includes(searchTerm.toLowerCase()))
+                    );
+
+                    const resultsContainer = document.getElementById('paymentClientSearchResults');
+
+                    if (filteredClients.length === 0) {
+                        resultsContainer.innerHTML = '<div class="p-2 text-muted">No se encontraron clientes</div>';
+                        resultsContainer.style.display = 'block';
+                        return;
+                    }
+
+                    resultsContainer.innerHTML = filteredClients.slice(0, 5).map(client => `
+                        <div class="p-2 border-bottom cursor-pointer hover-bg-light" onclick="selectClientForPayment(${JSON.stringify(client).replace(/"/g, '"')})">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-grow-1">
+                                    <strong>${client.nombre || ''} ${client.apellido || ''}</strong><br>
+                                    <small class="text-muted">${client.email || ''}</small>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    resultsContainer.style.display = 'block';
+                }, 300);
+            });
+
+            function selectClientForPayment(client) {
+                selectedClient = client;
+                document.getElementById('paymentClientSearch').value = `${client.nombre} ${client.apellido}`;
+                document.getElementById('selectedPaymentClientName').textContent = `${client.nombre} ${client.apellido}`;
+                document.getElementById('selectedPaymentClient').style.display = 'block';
+                document.getElementById('paymentClientSearchResults').style.display = 'none';
+
+                // Load client's active loans
+                const clientLoans = allLoans.filter(loan => loan.cliente_id === client._id && loan.estado === 'activo');
+                const select = document.getElementById('paymentPrestamo');
+                select.innerHTML = '<option value="">Seleccionar préstamo...</option>';
+
+                if (clientLoans.length === 0) {
+                    select.innerHTML += '<option value="" disabled>No hay préstamos activos para este cliente</option>';
+                } else {
+                    clientLoans.forEach(loan => {
+                        const metrics = loan.metrics || {};
+                        select.innerHTML += `<option value="${loan._id}">ID: ${loan._id.substring(-8).toUpperCase()} - Saldo: $${(metrics.saldo_actual || 0).toLocaleString()}</option>`;
+                    });
+                }
+
+                document.getElementById('loanSelection').style.display = 'block';
+            }
+
+            function loadLoanDetails() {
+                const loanId = document.getElementById('paymentPrestamo').value;
+                if (!loanId) return;
+
+                const loan = allLoans.find(l => l._id === loanId);
+                if (!loan) return;
+
+                const metrics = loan.metrics || {};
+
+                // Update loan summary
+                document.getElementById('loanCapitalInicial').textContent = loan.capital_inicial.toLocaleString();
+                document.getElementById('loanSaldoPendiente').textContent = (metrics.saldo_actual || 0).toLocaleString();
+                document.getElementById('loanProximoPago').textContent = metrics.proximo_pago ?
+                    new Date(metrics.proximo_pago).toLocaleDateString('es-ES') : 'N/A';
+                document.getElementById('loanInteresPendiente').textContent = (metrics.interes_acumulado || 0).toLocaleString();
+                document.getElementById('loanMoraAcumulada').textContent = (metrics.atraso_acumulado || 0).toLocaleString();
+                document.getElementById('loanDiasMora').textContent = metrics.dias_mora || 0;
+
+                document.getElementById('loanSummaryCard').style.display = 'block';
+                document.getElementById('paymentDetails').style.display = 'block';
+                document.getElementById('calculateBtn').style.display = 'inline-block';
+
+                // Set default payment date to today
+                document.getElementById('paymentFecha').value = new Date().toISOString().split('T')[0];
+            }
+
+            function clearSelectedPaymentClient() {
+                selectedClient = null;
+                document.getElementById('paymentClientSearch').value = '';
+                document.getElementById('selectedPaymentClient').style.display = 'none';
+                document.getElementById('loanSelection').style.display = 'none';
+                document.getElementById('paymentDetails').style.display = 'none';
+                document.getElementById('loanSummaryCard').style.display = 'none';
+                document.getElementById('paymentDistributionCard').style.display = 'none';
+                document.getElementById('calculateBtn').style.display = 'none';
+                document.getElementById('savePaymentBtn').style.display = 'none';
+            }
+
+            function logout() {
+                if (confirm('¿Está seguro que desea cerrar sesión?')) {
+                    localStorage.removeItem('token');
+                    window.location.href = 'login.html';
+                }
+            }
+
+            // Initialize when page loads
+            document.addEventListener('DOMContentLoaded', () => {
+                paymentManager.init();
+            });
+
+            // Sidebar toggle
+            document.getElementById('sidebarToggle').addEventListener('click', function() {
+                document.body.classList.toggle('sb-sidenav-toggled');
+            });
+        </script>
+    </body>
+</html>

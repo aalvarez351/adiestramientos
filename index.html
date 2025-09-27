@@ -4,17 +4,23 @@
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="Cursos avanzados de computación para profesionales. Aprende IA, Ciberseguridad, Ciencia de Datos y más." />
-        <meta name="author" content="Advanced Computer Courses" />
-        <title>Cursos Avanzados de Computación | Tecnología del Futuro</title>
+        <meta name="description" content="Fintech líder en gestión de préstamos. Tecnología avanzada, transparencia total y seguridad bancaria. Solicite su préstamo y nosotros nos encargamos de todo." />
+        <meta name="author" content="Fintech Préstamos" />
+        <title>Fintech Préstamos | Gestión Inteligente de Préstamos</title>
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <style>
             .bg-gradient-primary {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             }
             .bg-gradient-secondary {
-                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            }
+            .bg-gradient-success {
+                background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            }
+            .bg-gradient-warning {
+                background: linear-gradient(135deg, #fcb045 0%, #fd1d1d 100%);
             }
             .card {
                 transition: all 0.3s ease;
@@ -25,21 +31,33 @@
                 transform: translateY(-10px);
                 box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             }
-            .course-icon {
+            .feature-icon {
                 font-size: 3rem;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 background-clip: text;
             }
             .btn-gradient {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
                 border: none;
                 transition: all 0.3s ease;
             }
             .btn-gradient:hover {
                 transform: translateY(-2px);
-                box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+                box-shadow: 0 10px 25px rgba(30, 60, 114, 0.4);
+            }
+            .btn-outline-gradient {
+                border: 2px solid;
+                border-image: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%) 1;
+                background: transparent;
+                color: #1e3c72;
+                transition: all 0.3s ease;
+            }
+            .btn-outline-gradient:hover {
+                background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+                color: white;
+                transform: translateY(-2px);
             }
             .navbar-brand {
                 font-weight: 700;
@@ -59,7 +77,7 @@
                 left: 0;
                 right: 0;
                 bottom: 0;
-                background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="%23ffffff10" points="0,1000 1000,0 1000,1000"/></svg>');
+                background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="%231e3c7210" points="0,1000 1000,0 1000,1000"/></svg>');
                 z-index: 1;
             }
             .hero-content {
@@ -67,12 +85,12 @@
                 z-index: 2;
             }
             .stats-section {
-                background: #f8f9fa;
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             }
             .stat-number {
                 font-size: 3rem;
                 font-weight: 700;
-                color: #667eea;
+                color: #1e3c72;
             }
             .section-title {
                 position: relative;
@@ -86,7 +104,35 @@
                 transform: translateX(-50%);
                 width: 50px;
                 height: 3px;
+                background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            }
+            .tech-badge {
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 50px;
+                font-size: 0.875rem;
+                font-weight: 600;
+                display: inline-block;
+                margin: 0.25rem;
+            }
+            .security-indicator {
+                position: relative;
+                overflow: hidden;
+            }
+            .security-indicator::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+                animation: shimmer 2s infinite;
+            }
+            @keyframes shimmer {
+                0% { left: -100%; }
+                100% { left: 100%; }
             }
         </style>
     </head>
@@ -95,8 +141,8 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
             <div class="container">
                 <a class="navbar-brand" href="index.html">
-                    <i class="fas fa-graduation-cap me-2"></i>
-                    Cursos Avanzados
+                    <i class="fas fa-money-bill-wave me-2"></i>
+                    Fintech Préstamos
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
@@ -104,10 +150,13 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="#courses">Cursos</a>
+                            <a class="nav-link" href="#services">Servicios</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#about">Nosotros</a>
+                            <a class="nav-link" href="#features">Características</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#technology">Tecnología</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="transparency.html">Transparencia</a>
@@ -117,12 +166,12 @@
                         </li>
                         <li class="nav-item ms-2">
                             <a class="btn btn-outline-light me-2" href="login.html">
-                                <i class="fas fa-sign-in-alt me-1"></i>Iniciar Sesión
+                                <i class="fas fa-sign-in-alt me-1"></i>Acceso Admin
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-gradient text-white" href="register.html">
-                                <i class="fas fa-user-plus me-1"></i>Registrar Interés
+                            <a class="btn btn-gradient text-white" href="register-user.html">
+                                <i class="fas fa-hand-holding-usd me-1"></i>Solicitar Préstamo
                             </a>
                         </li>
                     </ul>
@@ -135,20 +184,36 @@
             <div class="container hero-content">
                 <div class="row align-items-center">
                     <div class="col-lg-6">
-                        <h1 class="display-3 fw-bold mb-4">Domina las Tecnologías del Futuro</h1>
-                        <p class="lead mb-4">Impulsa tu carrera con nuestros cursos avanzados de computación. Aprende de expertos y obtén las habilidades más demandadas en el mercado tecnológico.</p>
-                        <div class="d-flex flex-column flex-sm-row gap-3">
-                            <a href="register.html" class="btn btn-light btn-lg px-4">
-                                <i class="fas fa-rocket me-2"></i>Comenzar Ahora
+                        <div class="tech-badge mb-3">🏆 Fintech Líder 2024</div>
+                        <h1 class="display-4 fw-bold mb-4">Gestión Inteligente de Préstamos</h1>
+                        <p class="lead mb-4 fs-5">
+                            Tecnología avanzada para la gestión completa de sus préstamos.
+                            <strong>Solicite su préstamo y nosotros nos encargamos de todo.</strong>
+                            Transparencia total, seguridad bancaria y las últimas innovaciones tecnológicas.
+                        </p>
+                        <div class="d-flex flex-column flex-sm-row gap-3 mb-4">
+                            <a href="register-user.html" class="btn btn-light btn-lg px-4">
+                                <i class="fas fa-hand-holding-usd me-2"></i>Solicitar Préstamo
                             </a>
-                            <a href="#courses" class="btn btn-outline-light btn-lg px-4">
-                                <i class="fas fa-play me-2"></i>Ver Cursos
+                            <a href="#services" class="btn btn-outline-light btn-lg px-4">
+                                <i class="fas fa-info-circle me-2"></i>Conocer Más
                             </a>
+                        </div>
+                        <div class="d-flex gap-3 flex-wrap">
+                            <span class="tech-badge">🔒 Seguridad Bancaria</span>
+                            <span class="tech-badge">⚡ Procesos Automatizados</span>
+                            <span class="tech-badge">📱 Banca Digital</span>
+                            <span class="tech-badge">⛓️ Blockchain</span>
                         </div>
                     </div>
                     <div class="col-lg-6 text-center">
-                        <div class="mt-5 mt-lg-0">
-                            <i class="fas fa-laptop-code" style="font-size: 15rem; opacity: 0.3;"></i>
+                        <div class="mt-5 mt-lg-0 position-relative">
+                            <div class="security-indicator">
+                                <i class="fas fa-shield-alt" style="font-size: 12rem; opacity: 0.8; color: rgba(255,255,255,0.9);"></i>
+                            </div>
+                            <div class="position-absolute top-50 start-50 translate-middle">
+                                <i class="fas fa-lock" style="font-size: 4rem; color: #38ef7d;"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -158,118 +223,223 @@
         <!-- Stats Section -->
         <section class="stats-section py-5">
             <div class="container">
+                <div class="text-center mb-5">
+                    <h2 class="section-title display-5 fw-bold">Números que Hablan por Sí Solos</h2>
+                    <p class="lead text-muted">Confianza respaldada por resultados excepcionales</p>
+                </div>
                 <div class="row text-center">
                     <div class="col-md-3 mb-4">
+                        <div class="stat-number">$2.5M+</div>
+                        <p class="text-muted">Préstamos Otorgados</p>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="stat-number">98.5%</div>
+                        <p class="text-muted">Tasa de Recuperación</p>
+                    </div>
+                    <div class="col-md-3 mb-4">
                         <div class="stat-number">500+</div>
-                        <p class="text-muted">Estudiantes Graduados</p>
-                    </div>
-                    <div class="col-md-3 mb-4">
-                        <div class="stat-number">95%</div>
-                        <p class="text-muted">Tasa de Empleabilidad</p>
-                    </div>
-                    <div class="col-md-3 mb-4">
-                        <div class="stat-number">50+</div>
-                        <p class="text-muted">Empresas Aliadas</p>
+                        <p class="text-muted">Clientes Satisfechos</p>
                     </div>
                     <div class="col-md-3 mb-4">
                         <div class="stat-number">24/7</div>
-                        <p class="text-muted">Soporte Técnico</p>
+                        <p class="text-muted">Atención Digital</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Courses Section -->
-        <section id="courses" class="py-5">
+        <!-- Services Section -->
+        <section id="services" class="py-5">
             <div class="container">
                 <div class="text-center mb-5">
-                    <h2 class="section-title display-5 fw-bold">Nuestros Cursos</h2>
-                    <p class="lead text-muted mt-4">Programas diseñados por expertos para profesionales ambiciosos</p>
+                    <h2 class="section-title display-5 fw-bold">Nuestros Servicios</h2>
+                    <p class="lead text-muted mt-4">Gestión completa de préstamos con tecnología de vanguardia</p>
                 </div>
                 <div class="row g-4">
                     <div class="col-lg-4 col-md-6">
                         <div class="card h-100 text-center p-4">
-                            <div class="course-icon mb-3">
-                                <i class="fas fa-brain"></i>
+                            <div class="feature-icon mb-3">
+                                <i class="fas fa-hand-holding-usd"></i>
                             </div>
-                            <h5 class="card-title fw-bold">Inteligencia Artificial</h5>
-                            <p class="card-text text-muted">Explora algoritmos de IA, aprendizaje automático y redes neuronales. Aprende a construir sistemas inteligentes.</p>
+                            <h5 class="card-title fw-bold">Solicitud de Préstamos</h5>
+                            <p class="card-text text-muted">Proceso 100% digital. Solicite su préstamo desde cualquier dispositivo y reciba respuesta inmediata.</p>
                             <div class="mt-auto">
-                                <span class="badge bg-primary mb-2">12 semanas</span>
-                                <span class="badge bg-secondary mb-2">Avanzado</span>
+                                <span class="badge bg-success mb-2">Aprobación Rápida</span>
+                                <span class="badge bg-primary mb-2">24/7 Disponible</span>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <div class="card h-100 text-center p-4">
-                            <div class="course-icon mb-3">
-                                <i class="fas fa-shield-alt"></i>
+                            <div class="feature-icon mb-3">
+                                <i class="fas fa-calculator"></i>
                             </div>
-                            <h5 class="card-title fw-bold">Ciberseguridad</h5>
-                            <p class="card-text text-muted">Protege sistemas y datos de amenazas cibernéticas. Domina el hacking ético y protocolos de seguridad.</p>
+                            <h5 class="card-title fw-bold">Gestión Automatizada</h5>
+                            <p class="card-text text-muted">Cálculos automáticos de intereses, amortización y cronogramas de pago. Sin errores humanos.</p>
                             <div class="mt-auto">
-                                <span class="badge bg-primary mb-2">10 semanas</span>
-                                <span class="badge bg-secondary mb-2">Avanzado</span>
+                                <span class="badge bg-info mb-2">Precisión Total</span>
+                                <span class="badge bg-warning mb-2">IA Avanzada</span>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <div class="card h-100 text-center p-4">
-                            <div class="course-icon mb-3">
+                            <div class="feature-icon mb-3">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <h5 class="card-title fw-bold">Banca Digital</h5>
+                            <p class="card-text text-muted">Acceso completo desde su smartphone. Realice pagos, consulte saldos y gestione su préstamo.</p>
+                            <div class="mt-auto">
+                                <span class="badge bg-primary mb-2">App Móvil</span>
+                                <span class="badge bg-success mb-2">Pagos Digitales</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card h-100 text-center p-4">
+                            <div class="feature-icon mb-3">
                                 <i class="fas fa-chart-line"></i>
                             </div>
-                            <h5 class="card-title fw-bold">Ciencia de Datos</h5>
-                            <p class="card-text text-muted">Analiza e interpreta datos complejos. Aprende Python, R y herramientas de big data.</p>
+                            <h5 class="card-title fw-bold">Reportes y Analytics</h5>
+                            <p class="card-text text-muted">Informes detallados de su historial crediticio y proyecciones financieras personalizadas.</p>
                             <div class="mt-auto">
-                                <span class="badge bg-primary mb-2">14 semanas</span>
-                                <span class="badge bg-secondary mb-2">Avanzado</span>
+                                <span class="badge bg-info mb-2">Business Intelligence</span>
+                                <span class="badge bg-primary mb-2">Reportes PDF</span>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <div class="card h-100 text-center p-4">
-                            <div class="course-icon mb-3">
-                                <i class="fas fa-code"></i>
+                            <div class="feature-icon mb-3">
+                                <i class="fas fa-shield-alt"></i>
                             </div>
-                            <h5 class="card-title fw-bold">Desarrollo Web</h5>
-                            <p class="card-text text-muted">Construye aplicaciones web modernas con HTML, CSS, JavaScript y frameworks como React.</p>
+                            <h5 class="card-title fw-bold">Seguridad Bancaria</h5>
+                            <p class="card-text text-muted">Protección de nivel bancario con encriptación blockchain y protocolos de seguridad avanzados.</p>
                             <div class="mt-auto">
-                                <span class="badge bg-primary mb-2">16 semanas</span>
-                                <span class="badge bg-warning text-dark mb-2">Intermedio-Avanzado</span>
+                                <span class="badge bg-danger mb-2">Encriptación SSL</span>
+                                <span class="badge bg-warning mb-2">Blockchain</span>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <div class="card h-100 text-center p-4">
-                            <div class="course-icon mb-3">
-                                <i class="fas fa-robot"></i>
+                            <div class="feature-icon mb-3">
+                                <i class="fas fa-headset"></i>
                             </div>
-                            <h5 class="card-title fw-bold">Machine Learning</h5>
-                            <p class="card-text text-muted">Sumérgete en modelos de ML, entrenamiento y despliegue. Proyectos prácticos incluidos.</p>
+                            <h5 class="card-title fw-bold">Atención 24/7</h5>
+                            <p class="card-text text-muted">Soporte técnico y financiero disponible las 24 horas. Chatbot inteligente y asesores humanos.</p>
                             <div class="mt-auto">
-                                <span class="badge bg-primary mb-2">12 semanas</span>
-                                <span class="badge bg-secondary mb-2">Avanzado</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="card h-100 text-center p-4">
-                            <div class="course-icon mb-3">
-                                <i class="fas fa-cloud"></i>
-                            </div>
-                            <h5 class="card-title fw-bold">Cloud Computing</h5>
-                            <p class="card-text text-muted">Domina AWS, Azure y Google Cloud. Aprende arquitecturas escalables y servicios en la nube.</p>
-                            <div class="mt-auto">
-                                <span class="badge bg-primary mb-2">10 semanas</span>
-                                <span class="badge bg-secondary mb-2">Avanzado</span>
+                                <span class="badge bg-success mb-2">Chat 24/7</span>
+                                <span class="badge bg-primary mb-2">Asesores Humanos</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="text-center mt-5">
-                    <a href="register.html" class="btn btn-gradient btn-lg text-white px-5">
-                        <i class="fas fa-graduation-cap me-2"></i>Registrar Interés en Cursos
+                    <a href="register-user.html" class="btn btn-gradient btn-lg text-white px-5">
+                        <i class="fas fa-hand-holding-usd me-2"></i>Solicitar Mi Préstamo
                     </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="py-5 bg-light">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <h2 class="section-title display-5 fw-bold">¿Por Qué Elegirnos?</h2>
+                    <p class="lead text-muted mt-4">La combinación perfecta entre innovación tecnológica y servicio financiero tradicional</p>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-4 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body text-center p-4">
+                                <div class="bg-gradient-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                    <i class="fas fa-eye fa-2x"></i>
+                                </div>
+                                <h5 class="card-title fw-bold">Transparencia Total</h5>
+                                <p class="card-text text-muted">Cada operación es completamente transparente. Usted conoce exactamente cuánto paga, cuándo paga y por qué paga.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body text-center p-4">
+                                <div class="bg-gradient-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                    <i class="fas fa-lock fa-2x"></i>
+                                </div>
+                                <h5 class="card-title fw-bold">Seguridad Bancaria</h5>
+                                <p class="card-text text-muted">Protección de nivel bancario con encriptación de grado militar y protocolos de seguridad avanzados.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body text-center p-4">
+                                <div class="bg-gradient-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                    <i class="fas fa-rocket fa-2x"></i>
+                                </div>
+                                <h5 class="card-title fw-bold">Procesos Automatizados</h5>
+                                <p class="card-text text-muted">Tecnología de IA y machine learning para procesos rápidos, eficientes y sin errores humanos.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technology Section -->
+        <section id="technology" class="py-5">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <h2 class="section-title display-5 fw-bold">Tecnología de Vanguardia</h2>
+                    <p class="lead text-muted mt-4">Utilizamos las últimas innovaciones tecnológicas para ofrecerle el mejor servicio</p>
+                </div>
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="tech-badge">
+                                    <i class="fab fa-bitcoin me-2"></i>Blockchain
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="tech-badge">
+                                    <i class="fas fa-brain me-2"></i>Inteligencia Artificial
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="tech-badge">
+                                    <i class="fas fa-mobile-alt me-2"></i>Banca Móvil
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="tech-badge">
+                                    <i class="fas fa-credit-card me-2"></i>Pagos Digitales
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="tech-badge">
+                                    <i class="fas fa-cloud me-2"></i>Cloud Computing
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="tech-badge">
+                                    <i class="fas fa-robot me-2"></i>Robo-Advisors
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 text-center">
+                        <div class="position-relative">
+                            <i class="fas fa-cogs" style="font-size: 8rem; color: #1e3c72; opacity: 0.3;"></i>
+                            <div class="position-absolute top-50 start-50 translate-middle">
+                                <i class="fas fa-microchip" style="font-size: 3rem; color: #38ef7d;"></i>
+                            </div>
+                        </div>
+                        <h4 class="mt-4 fw-bold">Innovación Constante</h4>
+                        <p class="text-muted">Invertimos continuamente en las últimas tecnologías para ofrecerle la mejor experiencia financiera digital.</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -279,56 +449,114 @@
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-6">
-                        <h2 class="section-title display-5 fw-bold mb-4">¿Por qué elegirnos?</h2>
+                        <h2 class="section-title display-5 fw-bold mb-4">Nuestra Misión</h2>
+                        <p class="lead mb-4">Revolucionar la gestión de préstamos mediante tecnología avanzada, ofreciendo servicios financieros transparentes, seguros y accesibles para todos.</p>
                         <div class="row">
                             <div class="col-sm-6 mb-4">
                                 <div class="d-flex align-items-center">
                                     <div class="bg-gradient-primary text-white rounded-circle p-3 me-3">
-                                        <i class="fas fa-users"></i>
+                                        <i class="fas fa-eye"></i>
                                     </div>
                                     <div>
-                                        <h6 class="fw-bold mb-1">Instructores Expertos</h6>
-                                        <small class="text-muted">Profesionales de la industria</small>
+                                        <h6 class="fw-bold mb-1">Transparencia Total</h6>
+                                        <small class="text-muted">Sin costos ocultos</small>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-6 mb-4">
                                 <div class="d-flex align-items-center">
-                                    <div class="bg-gradient-primary text-white rounded-circle p-3 me-3">
-                                        <i class="fas fa-certificate"></i>
+                                    <div class="bg-gradient-success text-white rounded-circle p-3 me-3">
+                                        <i class="fas fa-shield-alt"></i>
                                     </div>
                                     <div>
-                                        <h6 class="fw-bold mb-1">Certificación Oficial</h6>
-                                        <small class="text-muted">Reconocida internacionalmente</small>
+                                        <h6 class="fw-bold mb-1">Seguridad Máxima</h6>
+                                        <small class="text-muted">Protección bancaria</small>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-6 mb-4">
                                 <div class="d-flex align-items-center">
-                                    <div class="bg-gradient-primary text-white rounded-circle p-3 me-3">
-                                        <i class="fas fa-laptop"></i>
+                                    <div class="bg-gradient-secondary text-white rounded-circle p-3 me-3">
+                                        <i class="fas fa-bolt"></i>
                                     </div>
                                     <div>
-                                        <h6 class="fw-bold mb-1">Aprendizaje Práctico</h6>
-                                        <small class="text-muted">Proyectos reales</small>
+                                        <h6 class="fw-bold mb-1">Procesos Rápidos</h6>
+                                        <small class="text-muted">Aprobación inmediata</small>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-6 mb-4">
                                 <div class="d-flex align-items-center">
-                                    <div class="bg-gradient-primary text-white rounded-circle p-3 me-3">
-                                        <i class="fas fa-handshake"></i>
+                                    <div class="bg-gradient-warning text-white rounded-circle p-3 me-3">
+                                        <i class="fas fa-headset"></i>
                                     </div>
                                     <div>
-                                        <h6 class="fw-bold mb-1">Bolsa de Trabajo</h6>
-                                        <small class="text-muted">Conexiones con empresas</small>
+                                        <h6 class="fw-bold mb-1">Soporte 24/7</h6>
+                                        <small class="text-muted">Atención personalizada</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6 text-center">
-                        <i class="fas fa-award" style="font-size: 12rem; color: #667eea; opacity: 0.7;"></i>
+                        <div class="position-relative">
+                            <i class="fas fa-building" style="font-size: 10rem; color: #1e3c72; opacity: 0.2;"></i>
+                            <div class="position-absolute top-50 start-50 translate-middle">
+                                <i class="fas fa-handshake" style="font-size: 4rem; color: #38ef7d;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-5">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <h2 class="section-title display-5 fw-bold">¿Listo para Solicitar su Préstamo?</h2>
+                    <p class="lead text-muted mt-4">Contáctenos hoy mismo y obtenga respuesta inmediata a su solicitud</p>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="card shadow-lg border-0">
+                            <div class="card-body p-5">
+                                <div class="row text-center">
+                                    <div class="col-md-4 mb-4">
+                                        <div class="bg-gradient-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                            <i class="fas fa-phone fa-2x"></i>
+                                        </div>
+                                        <h5 class="fw-bold">Llámenos</h5>
+                                        <p class="text-muted">+1 (555) FIN-TECH</p>
+                                        <small class="text-muted">Atención 24/7</small>
+                                    </div>
+                                    <div class="col-md-4 mb-4">
+                                        <div class="bg-gradient-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                            <i class="fas fa-envelope fa-2x"></i>
+                                        </div>
+                                        <h5 class="fw-bold">Escríbanos</h5>
+                                        <p class="text-muted">info@fintechprestamos.com</p>
+                                        <small class="text-muted">Respuesta en 1 hora</small>
+                                    </div>
+                                    <div class="col-md-4 mb-4">
+                                        <div class="bg-gradient-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                            <i class="fas fa-mobile-alt fa-2x"></i>
+                                        </div>
+                                        <h5 class="fw-bold">App Móvil</h5>
+                                        <p class="text-muted">Disponible en App Store y Google Play</p>
+                                        <small class="text-muted">Gestión completa desde su teléfono</small>
+                                    </div>
+                                </div>
+                                <div class="text-center mt-4">
+                                    <a href="register-user.html" class="btn btn-gradient btn-lg text-white px-5 me-3">
+                                        <i class="fas fa-hand-holding-usd me-2"></i>Solicitar Préstamo Ahora
+                                    </a>
+                                    <a href="login.html" class="btn btn-outline-gradient btn-lg px-5">
+                                        <i class="fas fa-tachometer-alt me-2"></i>Acceso Administrativo
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -340,10 +568,10 @@
                 <div class="row">
                     <div class="col-lg-4 mb-4">
                         <h5 class="fw-bold mb-3">
-                            <i class="fas fa-graduation-cap me-2"></i>
-                            Cursos Avanzados
+                            <i class="fas fa-money-bill-wave me-2"></i>
+                            Fintech Préstamos
                         </h5>
-                        <p class="text-muted">Formando a los profesionales tecnológicos del futuro con educación de calidad y metodologías innovadoras.</p>
+                        <p class="text-muted">Revolucionando la gestión de préstamos con tecnología blockchain, IA y procesos 100% digitales. Su préstamo, nuestra responsabilidad.</p>
                         <div class="d-flex gap-3">
                             <a href="#" class="text-white-50"><i class="fab fa-facebook-f"></i></a>
                             <a href="#" class="text-white-50"><i class="fab fa-twitter"></i></a>
@@ -352,45 +580,50 @@
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-6 mb-4">
-                        <h6 class="fw-bold mb-3">Cursos</h6>
+                        <h6 class="fw-bold mb-3">Servicios</h6>
                         <ul class="list-unstyled">
-                            <li><a href="#" class="text-white-50 text-decoration-none">Inteligencia Artificial</a></li>
-                            <li><a href="#" class="text-white-50 text-decoration-none">Ciberseguridad</a></li>
-                            <li><a href="#" class="text-white-50 text-decoration-none">Ciencia de Datos</a></li>
-                            <li><a href="#" class="text-white-50 text-decoration-none">Desarrollo Web</a></li>
+                            <li><a href="#services" class="text-white-50 text-decoration-none">Solicitud de Préstamos</a></li>
+                            <li><a href="#services" class="text-white-50 text-decoration-none">Gestión Automatizada</a></li>
+                            <li><a href="#services" class="text-white-50 text-decoration-none">Banca Digital</a></li>
+                            <li><a href="#services" class="text-white-50 text-decoration-none">Reportes Analytics</a></li>
                         </ul>
                     </div>
                     <div class="col-lg-2 col-md-6 mb-4">
                         <h6 class="fw-bold mb-3">Empresa</h6>
                         <ul class="list-unstyled">
-                            <li><a href="#" class="text-white-50 text-decoration-none">Nosotros</a></li>
-                            <li><a href="#" class="text-white-50 text-decoration-none">Instructores</a></li>
-                            <li><a href="#" class="text-white-50 text-decoration-none">Testimonios</a></li>
-                            <li><a href="#" class="text-white-50 text-decoration-none">Blog</a></li>
+                            <li><a href="#about" class="text-white-50 text-decoration-none">Nosotros</a></li>
+                            <li><a href="#technology" class="text-white-50 text-decoration-none">Tecnología</a></li>
+                            <li><a href="transparency.html" class="text-white-50 text-decoration-none">Transparencia</a></li>
+                            <li><a href="#contact" class="text-white-50 text-decoration-none">Contacto</a></li>
                         </ul>
                     </div>
                     <div class="col-lg-4 mb-4">
                         <h6 class="fw-bold mb-3">Contacto</h6>
                         <div class="d-flex align-items-center mb-2">
                             <i class="fas fa-envelope me-3"></i>
-                            <span class="text-white-50">info@cursosavanzados.com</span>
+                            <span class="text-white-50">info@fintechprestamos.com</span>
                         </div>
                         <div class="d-flex align-items-center mb-2">
                             <i class="fas fa-phone me-3"></i>
-                            <span class="text-white-50">+1 (555) 123-4567</span>
+                            <span class="text-white-50">+1 (555) FIN-TECH</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-clock me-3"></i>
+                            <span class="text-white-50">Atención 24/7</span>
                         </div>
                         <div class="d-flex align-items-center">
                             <i class="fas fa-map-marker-alt me-3"></i>
-                            <span class="text-white-50">123 Tech Street, Ciudad Tecnológica</span>
+                            <span class="text-white-50">Centro Financiero Digital</span>
                         </div>
                     </div>
                 </div>
                 <hr class="my-4">
                 <div class="row align-items-center">
                     <div class="col-md-6">
-                        <p class="text-white-50 mb-0">&copy; 2024 Cursos Avanzados de Computación. Todos los derechos reservados.</p>
+                        <p class="text-white-50 mb-0">&copy; 2024 Fintech Préstamos. Todos los derechos reservados.</p>
                     </div>
                     <div class="col-md-6 text-md-end">
+                        <a href="transparency.html" class="text-white-50 text-decoration-none me-3">Transparencia</a>
                         <a href="#" class="text-white-50 text-decoration-none me-3">Política de Privacidad</a>
                         <a href="#" class="text-white-50 text-decoration-none">Términos y Condiciones</a>
                     </div>
@@ -420,9 +653,39 @@
                 const navbar = document.querySelector('.navbar');
                 if (window.scrollY > 50) {
                     navbar.classList.add('bg-dark');
+                    navbar.classList.add('shadow');
                 } else {
                     navbar.classList.remove('bg-dark');
+                    navbar.classList.remove('shadow');
                 }
+            });
+
+            // Add animation to feature cards on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Apply animations to cards
+            document.querySelectorAll('.card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+
+            // Tech badges animation
+            document.querySelectorAll('.tech-badge').forEach((badge, index) => {
+                badge.style.animationDelay = `${index * 0.1}s`;
             });
         </script>
     </body>

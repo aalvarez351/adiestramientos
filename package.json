@@ -4,6 +4,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "import": "node run-import.js",
+    "import-file": "node run-import.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -16,6 +18,8 @@
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mongodb": "^6.20.0"
+    "mongodb": "^6.20.0",
+    "multer": "^2.0.2",
+    "xlsx": "^0.18.5"
   }
 }
