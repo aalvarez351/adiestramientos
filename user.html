@@ -167,10 +167,10 @@
             async function loadUserData() {
                 try {
                     const [loansRes, paymentsRes] = await Promise.all([
-                        fetch('http://localhost:3000/api/user/prestamos', {
+                        fetch('https://clean-daphene-personal351-7963be99.koyeb.app/api/user/prestamos', {
                             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
                         }),
-                        fetch('http://localhost:3000/api/user/pagos', {
+                        fetch('https://clean-daphene-personal351-7963be99.koyeb.app/api/user/pagos', {
                             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
                         })
                     ]);

@@ -286,8 +286,8 @@
 
             async function loadDataStats() {
                 try {
-                    const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://conectandopersonas.life';
-                    
+                    const API_BASE = 'https://clean-daphene-personal351-7963be99.koyeb.app';
+
                     const [clientsRes, loansRes, paymentsRes] = await Promise.all([
                         fetch(`${API_BASE}/api/clientes?limit=1`, {
                             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
@@ -360,7 +360,7 @@
                 `;
 
                 try {
-                    const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://conectandopersonas.life';
+                    const API_BASE = 'https://clean-daphene-personal351-7963be99.koyeb.app';
                     const response = await fetch(`${API_BASE}/api/import-excel`, {
                         method: 'POST',
                         headers: {
@@ -422,7 +422,7 @@
 
             async function exportClients() {
                 try {
-                    const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://conectandopersonas.life';
+                    const API_BASE = 'https://clean-daphene-personal351-7963be99.koyeb.app';
                     const response = await fetch(`${API_BASE}/api/clientes?limit=10000`, {
                         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
                     });
@@ -453,7 +453,7 @@
 
             async function exportLoans() {
                 try {
-                    const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://conectandopersonas.life';
+                    const API_BASE = 'https://clean-daphene-personal351-7963be99.koyeb.app';
                     const response = await fetch(`${API_BASE}/api/prestamos?limit=10000`, {
                         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
                     });
@@ -487,7 +487,7 @@
 
             async function exportPayments() {
                 try {
-                    const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://conectandopersonas.life';
+                    const API_BASE = 'https://clean-daphene-personal351-7963be99.koyeb.app';
                     const response = await fetch(`${API_BASE}/api/pagos?limit=10000`, {
                         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
                     });
@@ -520,7 +520,7 @@
             }
 
             async function previewData(type) {
-                const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://conectandopersonas.life';
+                const API_BASE = 'https://clean-daphene-personal351-7963be99.koyeb.app';
                 let endpoint, title, headers, renderCallback, searchCallback;
                 
                 switch(type) {

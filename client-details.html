@@ -316,7 +316,7 @@
                     console.log('Loading client details for ID:', clientId);
 
                     // Load client info
-                    const clientRes = await fetch(`http://localhost:3000/api/clientes/${clientId}`, {
+                    const clientRes = await fetch(`https://clean-daphene-personal351-7963be99.koyeb.app/api/clientes/${clientId}`, {
                         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
                     });
 
@@ -337,10 +337,10 @@
 
                     // Load loans and payments
                     const [loansRes, paymentsRes] = await Promise.all([
-                        fetch('http://localhost:3000/api/prestamos', {
+                        fetch('https://clean-daphene-personal351-7963be99.koyeb.app/api/prestamos', {
                             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
                         }),
-                        fetch('http://localhost:3000/api/pagos', {
+                        fetch('https://clean-daphene-personal351-7963be99.koyeb.app/api/pagos', {
                             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
                         })
                     ]);

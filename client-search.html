@@ -330,7 +330,7 @@
                     const token = localStorage.getItem('token');
                     console.log('Token available:', !!token);
 
-                    const response = await fetch('http://localhost:3000/api/clientes', {
+                    const response = await fetch('https://clean-daphene-personal351-7963be99.koyeb.app/api/clientes', {
                         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
                     });
 
@@ -441,10 +441,10 @@
 
                     // Load client loans and payments
                     const [loansRes, paymentsRes] = await Promise.all([
-                        fetch('http://localhost:3000/api/prestamos', {
+                        fetch('https://clean-daphene-personal351-7963be99.koyeb.app/api/prestamos', {
                             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
                         }),
-                        fetch('http://localhost:3000/api/pagos', {
+                        fetch('https://clean-daphene-personal351-7963be99.koyeb.app/api/pagos', {
                             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
                         })
                     ]);
@@ -822,10 +822,10 @@
 
                     // Load client loans and payments
                     const [loansRes, paymentsRes] = await Promise.all([
-                        fetch('http://localhost:3000/api/prestamos', {
+                        fetch('https://clean-daphene-personal351-7963be99.koyeb.app/api/prestamos', {
                             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
                         }),
-                        fetch('http://localhost:3000/api/pagos', {
+                        fetch('https://clean-daphene-personal351-7963be99.koyeb.app/api/pagos', {
                             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
                         })
                     ]);
