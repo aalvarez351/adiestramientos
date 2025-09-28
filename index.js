@@ -12,7 +12,49 @@ const crypto = require('crypto');
 const multer = require('multer');
 const path = require('path');
 const { securityConfig } = require('./security-config');
-const { buildSecureMongoURI } = require('./encrypt-credentials');
+const crypto = require('crypto');
+
+// Funciones de encriptación integradas
+function decryptCredential(encryptedText) {
+  try {
+    const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'mi_clave_super_secreta_de_32_caracteres_exactos';
+    const textParts = encryptedText.split(':');
+    const iv = Buffer.from(textParts.shift(), 'hex');
+    const encrypted = textParts.join(':');
+    const key = crypto.scryptSync(ENCRYPTION_KEY, 'salt', 32);
+    const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+    let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+    return decrypted;
+  } catch (error) {
+    return null;
+  }
+}
+
+function buildSecureMongoURI() {
+  try {
+    const userEnc = process.env.MONGO_USER_ENC;
+    const passEnc = process.env.MONGO_PASS_ENC;
+    const clusterEnc = process.env.MONGO_CLUSTER_ENC;
+    const dbName = process.env.DB_NAME || 'reposeidosdb';
+    
+    if (!userEnc || !passEnc || !clusterEnc) {
+      return null;
+    }
+    
+    const user = decryptCredential(userEnc);
+    const pass = decryptCredential(passEnc);
+    const cluster = decryptCredential(clusterEnc);
+    
+    if (!user || !pass || !cluster) {
+      return null;
+    }
+    
+    return `mongodb+srv://${user}:${pass}@${cluster}/${dbName}?retryWrites=true&w=majority`;
+  } catch (error) {
+    return null;
+  }
+}
 
 const app = express();
 // CORS configuration
