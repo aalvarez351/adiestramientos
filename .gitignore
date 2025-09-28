@@ -3,6 +3,8 @@
 .env.local
 .env.production
 .env.development
+setup-credentials.js
+encrypt-credentials.js
 
 # Credenciales y claves
 *.key
@@ -11,6 +13,8 @@
 *.pfx
 config/credentials.json
 config/database.json
+*credentials*.js
+*encrypt*.js
 
 # Archivos de datos sensibles
 *.xlsx

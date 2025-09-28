@@ -12,6 +12,7 @@ const crypto = require('crypto');
 const multer = require('multer');
 const path = require('path');
 const { securityConfig } = require('./security-config');
+const { buildSecureMongoURI } = require('./encrypt-credentials');
 
 const app = express();
 // CORS configuration
@@ -52,7 +53,9 @@ app.use((req, res, next) => {
 // Usar las rutas del dashboard
 app.use(dashboardRoutes);
 
-const uri = process.env.MONGO_URI;
+// Construir URI MongoDB usando credenciales encriptadas
+const uri = buildSecureMongoURI() || process.env.MONGO_URI || 'mongodb://localhost:27017/testdb';
+console.log('🔐 Usando conexión MongoDB encriptada');
 const client = new MongoClient(uri, {
   serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
   socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
