@@ -17,9 +17,9 @@ const app = express();
 app.use((req, res, next) => {
   const allowedOrigins = [
     'http://localhost:3000',
-    'https://aalvarez351.github.io',
-    'https://conectandopersonas.life',
-    'https://clean-daphene-personal351-7963be99.koyeb.app'
+    process.env.FRONTEND_URL_1 || 'https://localhost:3000',
+    process.env.FRONTEND_URL_2 || 'https://app.empresa.com',
+    process.env.FRONTEND_URL_3 || 'https://app-produccion.com'
   ];
 
   const origin = req.headers.origin;
@@ -81,38 +81,47 @@ async function createAdminUser() {
   const db = client.db('test');
   const users = db.collection('users');
 
-  // Create course admin
-  const courseAdmin = await users.findOne({ email: 'aalvarez351@gmail.com' });
-  if (!courseAdmin) {
-    const hashedPassword = await bcrypt.hash('Lentesdesol*', 10);
-    await users.insertOne({
-      email: 'aalvarez351@gmail.com',
-      password: hashedPassword,
-      role: 'admin',
-      name: 'Admin Cursos',
-      portal: 'courses'
-    });
-    console.log('Course admin user created');
+  // Create course admin from environment variables
+  const adminEmail = process.env.ADMIN_EMAIL;
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  
+  if (adminEmail && adminPassword) {
+    const courseAdmin = await users.findOne({ email: adminEmail });
+    if (!courseAdmin) {
+      const hashedPassword = await bcrypt.hash(adminPassword, 12);
+      await users.insertOne({
+        email: adminEmail,
+        password: hashedPassword,
+        role: 'admin',
+        name: 'Administrador Sistema',
+        portal: 'courses'
+      });
+      console.log('Course admin user created from environment');
+    }
   }
 
-  // Create or update loan admin
-  const loanAdmin = await users.findOne({ email: 'carlosmoto@gmail.com' });
-  if (!loanAdmin) {
-    const hashedPassword = await bcrypt.hash('carlosmoto1234', 10);
-    await users.insertOne({
-      email: 'carlosmoto@gmail.com',
-      password: hashedPassword,
-      role: 'administradores2',
-      name: 'Admin Préstamos'
-    });
-    console.log('Loan admin user created');
-  } else if (loanAdmin.role !== 'administradores2') {
-    // Update existing user to correct role
-    await users.updateOne(
-      { email: 'carlosmoto@gmail.com' },
-      { $set: { role: 'administradores2', name: 'Admin Préstamos' } }
-    );
-    console.log('Loan admin user updated');
+  // Create or update loan admin from environment variables
+  const loanAdminEmail = process.env.LOAN_ADMIN_EMAIL;
+  const loanAdminPassword = process.env.LOAN_ADMIN_PASSWORD;
+  
+  if (loanAdminEmail && loanAdminPassword) {
+    const loanAdmin = await users.findOne({ email: loanAdminEmail });
+    if (!loanAdmin) {
+      const hashedPassword = await bcrypt.hash(loanAdminPassword, 12);
+      await users.insertOne({
+        email: loanAdminEmail,
+        password: hashedPassword,
+        role: 'administradores2',
+        name: 'Administrador Préstamos'
+      });
+      console.log('Loan admin user created from environment');
+    } else if (loanAdmin.role !== 'administradores2') {
+      await users.updateOne(
+        { email: loanAdminEmail },
+        { $set: { role: 'administradores2', name: 'Administrador Préstamos' } }
+      );
+      console.log('Loan admin user updated');
+    }
   }
 }
 
@@ -211,19 +220,19 @@ app.post('/login', async (req, res) => {
       return res.status(400).json({ error: 'Email y contraseña son requeridos' });
     }
 
-    // Special case for admin when DB is offline
-    if (email === 'aalvarez351@gmail.com' && password === 'Lentesdesol*') {
+    // Fallback admin login usando variables de entorno
+    if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
       console.log('✅ Admin login (fallback mode)');
       const token = jwt.sign(
         { id: 'admin-offline', email, role: 'admin' },
-        process.env.JWT_SECRET || 'fallback-secret',
+        process.env.JWT_SECRET,
         { expiresIn: '24h' }
       );
       return res.json({
         success: true,
         token,
         role: 'admin',
-        name: 'Admin User',
+        name: 'Administrador Sistema',
         message: 'Login exitoso (modo offline)'
       });
     }

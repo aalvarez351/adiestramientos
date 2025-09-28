@@ -1,17 +1,20 @@
 {
-  "name": "mongodb",
+  "name": "sistema-gestion-empresarial",
   "version": "1.0.0",
+  "description": "Sistema web seguro para gestión empresarial con autenticación JWT y panel administrativo",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "dev": "nodemon index.js",
     "import": "node run-import.js",
     "import-file": "node run-import.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "security-check": "npm audit",
+    "validate-env": "node -e \"require('./security-config').validateEnvironmentConfig()\""
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": ["nodejs", "express", "mongodb", "jwt", "authentication", "admin-panel"],
+  "author": "Equipo de Desarrollo",
+  "license": "PRIVATE",
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",

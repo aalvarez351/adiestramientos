@@ -1,0 +1,67 @@
+# Archivos de configuración sensibles
+.env
+.env.local
+.env.production
+.env.development
+
+# Credenciales y claves
+*.key
+*.pem
+*.p12
+*.pfx
+config/credentials.json
+config/database.json
+
+# Archivos de datos sensibles
+*.xlsx
+*.xls
+*.csv
+mongoimport
+show
+use
+
+# Logs que pueden contener información sensible
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependencias
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Archivos de IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Archivos temporales
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Archivos de backup
+*.bak
+*.backup
+backup/
+
+# Archivos de certificados SSL
+*.crt
+*.cert
+*.ca-bundle
+
+# Archivos de configuración de producción
+production.json
+staging.json
+local.json

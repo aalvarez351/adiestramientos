@@ -1,15 +1,16 @@
 const { MongoClient, ObjectId } = require('mongodb');
 const bcrypt = require('bcryptjs');
+require('dotenv').config();
 
-const uri = "mongodb+srv://aalvarez351:Lentesdesol@ianube.furqsl0.mongodb.net/test";
+const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
 
 async function fixAndImport() {
   try {
     await client.connect();
     console.log('✅ Conectado a MongoDB Atlas');
-    
-    const db = client.db('test');
+
+    const db = client.db(process.env.DB_NAME || 'reposeidosdb');
     
     // Eliminar índices problemáticos si existen
     try {
@@ -288,10 +289,6 @@ async function fixAndImport() {
     console.log(`   - Clientes: ${clientesResult.insertedCount}`);
     console.log(`   - Préstamos: ${prestamosResult.insertedCount}`);
     console.log(`   - Pagos: ${pagosResult.insertedCount}`);
-    
-    console.log('\n🔑 Credenciales de acceso:');
-    console.log('   - Admin Cursos: aalvarez351@gmail.com / Lentesdesol*');
-    console.log('   - Admin Préstamos: carlosmoto@gmail.com / carlosmoto1234');
     
   } catch (error) {
     console.error('❌ Error:', error);

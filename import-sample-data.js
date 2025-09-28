@@ -1,15 +1,16 @@
 const { MongoClient, ObjectId } = require('mongodb');
 const bcrypt = require('bcryptjs');
+require('dotenv').config();
 
-const uri = "mongodb+srv://aalvarez351:Lentesdesol@ianube.furqsl0.mongodb.net/test";
+const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
 
 async function importSampleData() {
   try {
     await client.connect();
     console.log('✅ Conectado a MongoDB Atlas');
-    
-    const db = client.db('test');
+
+    const db = client.db(process.env.DB_NAME || 'reposeidosdb');
     
     // Datos de muestra para clientes
     const clientesMuestra = [
