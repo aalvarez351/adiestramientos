@@ -19,25 +19,32 @@ const app = express();
 app.use((req, res, next) => {
   const allowedOrigins = [
     'http://localhost:3000',
-    process.env.FRONTEND_URL_1 || 'https://localhost:3000',
-    process.env.FRONTEND_URL_2 || 'https://app.empresa.com',
-    process.env.FRONTEND_URL_3 || 'https://app-produccion.com'
+    'https://localhost:3000',
+    'https://conectandopersonas.life',
+    'https://clean-daphene-personal351-7963be99.koyeb.app'
   ];
 
   const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin) || origin?.match(/\.koyeb\.app$/)) {
+  
+  // Permitir orígenes específicos o dominios koyeb
+  if (allowedOrigins.includes(origin) || origin?.match(/\.koyeb\.app$/) || origin?.includes('conectandopersonas.life')) {
     res.header('Access-Control-Allow-Origin', origin);
+  } else {
+    // Fallback para desarrollo
+    res.header('Access-Control-Allow-Origin', '*');
   }
 
   res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control, Pragma');
+  res.header('Access-Control-Max-Age', '86400'); // 24 horas
 
   if (req.method === 'OPTIONS') {
-    res.sendStatus(200);
-  } else {
-    next();
+    res.status(200).end();
+    return;
   }
+  
+  next();
 });
 app.use(express.json());
 app.use(express.static('.'));

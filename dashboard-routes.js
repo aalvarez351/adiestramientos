@@ -1,24 +1,25 @@
 const express = require('express');
 const { MongoClient, ObjectId } = require('mongodb');
+const { buildSecureMongoURI } = require('./encrypt-credentials');
 const router = express.Router();
 
-const uri = process.env.MONGO_URI;
-const client = new MongoClient(uri);
-
-// Conectar a la base de datos
-async function connectDB() {
-    try {
-        await client.connect();
-        console.log('Dashboard routes connected to MongoDB');
-    } catch (error) {
-        console.error('Dashboard routes DB connection error:', error);
-    }
+// Función para crear cliente MongoDB solo cuando sea necesario
+function createMongoClient() {
+  const uri = buildSecureMongoURI() || process.env.MONGO_URI || 'mongodb://localhost:27017/testdb';
+  if (!uri || uri === 'mongodb://localhost:27017/testdb') {
+    console.log('⚠️  Dashboard routes: usando conexión de fallback');
+  }
+  return new MongoClient(uri);
 }
-connectDB();
+
+// No conectar automáticamente - crear conexión cuando sea necesaria
 
 // Endpoint para KPIs del dashboard con datos reales
 router.get('/api/dashboard/kpis', async (req, res) => {
+    let client;
     try {
+        client = createMongoClient();
+        await client.connect();
         const db = client.db('test');
         
         // Obtener KPIs reales de la base de datos
@@ -58,12 +59,17 @@ router.get('/api/dashboard/kpis', async (req, res) => {
     } catch (error) {
         console.error('Error obteniendo KPIs:', error);
         res.status(500).json({ error: 'Error obteniendo KPIs' });
+    } finally {
+        if (client) await client.close();
     }
 });
 
 // Endpoint para gráficos del dashboard con datos reales
 router.get('/api/dashboard/charts', async (req, res) => {
+    let client;
     try {
+        client = createMongoClient();
+        await client.connect();
         const db = client.db('test');
         
         // Estado de préstamos
@@ -142,13 +148,18 @@ router.get('/api/dashboard/charts', async (req, res) => {
     } catch (error) {
         console.error('Error obteniendo datos de gráficos:', error);
         res.status(500).json({ error: 'Error obteniendo datos de gráficos' });
+    } finally {
+        if (client) await client.close();
     }
 });
 
 // Endpoint para préstamos recientes con datos reales
 router.get('/api/dashboard/recent-loans', async (req, res) => {
+    let client;
     try {
         const limit = parseInt(req.query.limit) || 10;
+        client = createMongoClient();
+        await client.connect();
         const db = client.db('reposeidosdb');
         
         const recentLoans = await db.collection('prestamos').aggregate([
@@ -214,6 +225,8 @@ router.get('/api/dashboard/recent-loans', async (req, res) => {
     } catch (error) {
         console.error('Error obteniendo préstamos recientes:', error);
         res.status(500).json({ error: 'Error obteniendo préstamos recientes' });
+    } finally {
+        if (client) await client.close();
     }
 });
 
