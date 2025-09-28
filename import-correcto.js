@@ -4,22 +4,30 @@ const XLSX = require('xlsx');
 const fs = require('fs');
 const path = require('path');
 
-const uri = process.env.MONGO_URI;
-const client = new MongoClient(uri, {
-  serverSelectionTimeoutMS: 30000,
-  socketTimeoutMS: 60000,
-  maxPoolSize: 20,
-  minPoolSize: 5,
-  maxIdleTimeMS: 30000,
-  waitQueueTimeoutMS: 5000,
-  retryWrites: true,
-  retryReads: true
-});
+// Función para crear cliente MongoDB solo cuando sea necesario
+function createMongoClient() {
+  const uri = process.env.MONGO_URI;
+  if (!uri || uri.includes('[') || uri.includes('ENCRIPTADO')) {
+    throw new Error('MONGO_URI no está configurado correctamente. Configure las variables de entorno.');
+  }
+  return new MongoClient(uri, {
+    serverSelectionTimeoutMS: 30000,
+    socketTimeoutMS: 60000,
+    maxPoolSize: 20,
+    minPoolSize: 5,
+    maxIdleTimeMS: 30000,
+    waitQueueTimeoutMS: 5000,
+    retryWrites: true,
+    retryReads: true
+  });
+}
 
 async function importarDatosCorrectamente(filename = '30deagosto.xlsx') {
+  let client;
   try {
     console.log(`🚀 Iniciando importación correcta desde: ${filename}`);
 
+    client = createMongoClient();
     await client.connect();
     console.log('✅ Conectado a MongoDB');
 
@@ -206,8 +214,10 @@ async function importarDatosCorrectamente(filename = '30deagosto.xlsx') {
     console.error('❌ Error en importación:', error.message);
     throw error;
   } finally {
-    await client.close();
-    console.log('🔌 Conexión cerrada');
+    if (client) {
+      await client.close();
+      console.log('🔌 Conexión cerrada');
+    }
   }
 }
 
@@ -294,7 +304,9 @@ function parsearFecha(fecha) {
 }
 
 async function verificarImportacion() {
+  let client;
   try {
+    client = createMongoClient();
     await client.connect();
     const db = client.db('test');
     
@@ -328,7 +340,9 @@ async function verificarImportacion() {
     console.error('❌ Error verificando importación:', error.message);
     throw error;
   } finally {
-    await client.close();
+    if (client) {
+      await client.close();
+    }
   }
 }
 

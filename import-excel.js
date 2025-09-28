@@ -4,18 +4,26 @@ const XLSX = require('xlsx');
 const fs = require('fs');
 const path = require('path');
 
-const uri = process.env.MONGO_URI;
-const client = new MongoClient(uri, {
-  serverSelectionTimeoutMS: 5000,
-  socketTimeoutMS: 45000,
-  maxPoolSize: 10,
-});
+// Función para crear cliente MongoDB solo cuando sea necesario
+function createMongoClient() {
+  const uri = process.env.MONGO_URI;
+  if (!uri || uri.includes('[') || uri.includes('ENCRIPTADO')) {
+    throw new Error('MONGO_URI no está configurado correctamente. Configure las variables de entorno.');
+  }
+  return new MongoClient(uri, {
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+    maxPoolSize: 10,
+  });
+}
 
 async function importarDatos(filename = '30deagosto.xlsx') {
+  let client;
   try {
     console.log(`🚀 Iniciando importación de datos desde Excel: ${filename}`);
 
-    // Conectar a MongoDB
+    // Crear y conectar cliente MongoDB
+    client = createMongoClient();
     await client.connect();
     console.log('✅ Conectado a MongoDB');
 
@@ -71,8 +79,10 @@ async function importarDatos(filename = '30deagosto.xlsx') {
     console.error('❌ Error en la importación:', error.message);
     throw error;
   } finally {
-    await client.close();
-    console.log('🔌 Conexión cerrada');
+    if (client) {
+      await client.close();
+      console.log('🔌 Conexión cerrada');
+    }
   }
 }
 
