@@ -11,6 +11,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const multer = require('multer');
 const path = require('path');
+const { securityConfig } = require('./security-config');
 
 const app = express();
 // CORS configuration
@@ -39,6 +40,14 @@ app.use((req, res, next) => {
 });
 app.use(express.json());
 app.use(express.static('.'));
+
+// Aplicar headers de seguridad
+app.use((req, res, next) => {
+  Object.entries(securityConfig.securityHeaders).forEach(([header, value]) => {
+    res.setHeader(header, value);
+  });
+  next();
+});
 
 // Usar las rutas del dashboard
 app.use(dashboardRoutes);
