@@ -197,71 +197,82 @@ router.get('/api/dashboard/charts', async (req, res) => {
 router.get('/api/dashboard/recent-loans', async (req, res) => {
     let client;
     try {
+        const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+        
         client = createMongoClient();
         await client.connect();
-        const db = client.db('reposeidosdb');
+        const db = client.db('test');
         
-        const recentLoans = await db.collection('prestamos').aggregate([
-            {
-                $lookup: {
-                    from: 'clientes',
-                    localField: 'cliente_id',
-                    foreignField: '_id',
-                    as: 'cliente'
+        // Get loans with pagination using find() instead of aggregation for better skip/limit handling
+        const loansQuery = db.collection('prestamos')
+            .find({})
+            .sort({ fecha_creacion: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        const [loansData, totalCount] = await Promise.all([
+            loansQuery.toArray(),
+            db.collection('prestamos').countDocuments()
+        ]);
+
+        // Get client data for the loans
+        const clientIds = loansData
+            .map(loan => loan.cliente_id)
+            .filter(id => id) // Filter out null/undefined
+            .map(id => {
+                try {
+                    return typeof id === 'string' ? new ObjectId(id) : id;
+                } catch (e) {
+                    return id;
                 }
-            },
-            {
-                $addFields: {
-                    cliente: { $arrayElemAt: ['$cliente', 0] }
-                }
-            },
-            { $sort: { fecha_creacion: -1 } },
-            { $limit: limit },
-            {
-                $project: {
-                    clientName: {
-                        $concat: [
-                            { $ifNull: ['$cliente.nombre', 'Cliente'] },
-                            ' ',
-                            { $ifNull: ['$cliente.apellido', 'Anónimo'] }
-                        ]
-                    },
-                    amount: '$capital_inicial',
-                    date: '$fecha_creacion',
-                    status: {
-                        $switch: {
-                            branches: [
-                                { case: { $eq: ['$estado', 'activo'] }, then: 'Activo' },
-                                { case: { $eq: ['$estado', 'pagado'] }, then: 'Pagado' },
-                                { case: { $eq: ['$estado', 'vencido'] }, then: 'Vencido' }
-                            ],
-                            default: 'Pendiente'
-                        }
-                    },
-                    progress: {
-                        $multiply: [
-                            {
-                                $divide: [
-                                    { $subtract: ['$capital_inicial', '$saldo_actual'] },
-                                    '$capital_inicial'
-                                ]
-                            },
-                            100
-                        ]
-                    },
-                    nextPayment: {
-                        $dateAdd: {
-                            startDate: '$fecha_creacion',
-                            unit: 'day',
-                            amount: 15
-                        }
+            });
+
+        const clients = clientIds.length > 0 ? await db.collection('clientes')
+            .find({ _id: { $in: clientIds } })
+            .toArray() : [];
+
+        const clientMap = {};
+        clients.forEach(client => {
+            clientMap[client._id.toString()] = client;
+        });
+
+        // Format the loans data
+        const recentLoans = loansData.map(loan => {
+            const client = clientMap[loan.cliente_id?.toString()];
+            const clientName = client ?
+                `${client.nombre || 'Cliente'} ${client.apellido || 'Anónimo'}` :
+                'Cliente Anónimo';
+
+            return {
+                clientName,
+                amount: loan.capital_inicial,
+                date: loan.fecha_creacion,
+                status: (() => {
+                    switch (loan.estado) {
+                        case 'activo': return 'Activo';
+                        case 'pagado': return 'Pagado';
+                        case 'vencido': return 'Vencido';
+                        default: return 'Pendiente';
                     }
-                }
-            }
-        ]).toArray();
+                })(),
+                progress: Math.round(
+                    ((loan.capital_inicial - (loan.saldo_actual || loan.capital_inicial)) / loan.capital_inicial) * 100
+                ),
+                nextPayment: new Date(new Date(loan.fecha_creacion).getTime() + 15 * 24 * 60 * 60 * 1000)
+            };
+        });
         
-        res.json({ loans: recentLoans });
+        res.json({ 
+            loans: recentLoans,
+            pagination: {
+                page,
+                limit,
+                total: totalCount,
+                pages: Math.ceil(totalCount / limit)
+            }
+        });
     } catch (error) {
         console.error('Error obteniendo préstamos recientes:', error);
         res.status(500).json({ error: 'Error obteniendo préstamos recientes' });

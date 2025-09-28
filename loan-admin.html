@@ -276,32 +276,13 @@
 
                         <!-- Tabla de Préstamos Recientes -->
                         <div class="card shadow mb-4">
-                            <div class="card-header py-3">
+                            <div class="card-header py-3 d-flex justify-content-between align-items-center">
                                 <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-table me-2"></i>Préstamos Recientes</h6>
+                                <button class="btn btn-sm btn-outline-primary" onclick="recentLoansTable.refresh()">
+                                    <i class="fas fa-sync-alt me-1"></i>Actualizar
+                                </button>
                             </div>
-                            <div class="card-body">
-                                <div class="table-loading" id="recentLoansLoading">
-                                    <div class="text-center py-4">
-                                        <i class="fas fa-spinner fa-spin fa-2x text-muted mb-3"></i>
-                                        <p class="text-muted">Cargando préstamos recientes...</p>
-                                    </div>
-                                </div>
-                                <div class="table-responsive" id="recentLoansTable" style="display: none;">
-                                    <table class="table table-bordered" width="100%" cellspacing="0">
-                                        <thead>
-                                            <tr>
-                                                <th>Cliente</th>
-                                                <th>Monto</th>
-                                                <th>Fecha</th>
-                                                <th>Estado</th>
-                                                <th>Próximo Pago</th>
-                                                <th>Progreso</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="recentLoansBody"></tbody>
-                                    </table>
-                                </div>
-                            </div>
+                            <div id="recentLoansContainer"></div>
                         </div>
                     </div>
                 </main>
@@ -322,6 +303,7 @@
         <!-- Scripts -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="js/scripts.js"></script>
+        <script src="js/recent-loans-table.js"></script>
 
         <script>
             // Sistema de Dashboard Optimizado
@@ -337,7 +319,6 @@
                     this.updateLastUpdate();
                     await this.loadKPIs();
                     await this.loadCharts();
-                    await this.loadRecentLoans();
                 }
 
                 updateLastUpdate() {
@@ -653,57 +634,7 @@
                     }
                 }
 
-                async loadRecentLoans() {
-                    try {
-                        const token = localStorage.getItem('token');
-                        const response = await fetch(`${API_BASE}/api/dashboard/recent-loans?limit=10`, {
-                            headers: { 'Authorization': `Bearer ${token}` }
-                        });
 
-                        if (!response.ok) throw new Error('Error cargando préstamos recientes');
-
-                        const data = await response.json();
-                        this.renderRecentLoans(data.loans);
-                    } catch (error) {
-                        console.error('Error cargando préstamos recientes:', error);
-                        this.showTableError();
-                    }
-                }
-
-                renderRecentLoans(loans) {
-                    const loading = document.getElementById('recentLoansLoading');
-                    const table = document.getElementById('recentLoansTable');
-                    const tbody = document.getElementById('recentLoansBody');
-
-                    loading.style.display = 'none';
-                    table.style.display = 'block';
-
-                    tbody.innerHTML = loans.map(loan => `
-                        <tr>
-                            <td><strong>${loan.clientName}</strong></td>
-                            <td><strong>$${loan.amount.toLocaleString()}</strong></td>
-                            <td>${new Date(loan.date).toLocaleDateString('es-ES')}</td>
-                            <td><span class="badge bg-${this.getStatusColor(loan.status)}">${loan.status}</span></td>
-                            <td>${loan.nextPayment ? new Date(loan.nextPayment).toLocaleDateString('es-ES') : 'Completado'}</td>
-                            <td>
-                                <div class="progress">
-                                    <div class="progress-bar bg-${this.getProgressColor(Math.round(loan.progress))}"
-                                         style="width: ${Math.max(0, Math.min(100, Math.round(loan.progress)))}%"
-                                         aria-valuenow="${Math.round(loan.progress)}"
-                                         aria-valuemin="0"
-                                         aria-valuemax="100">
-                                        ${Math.round(loan.progress)}%
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    `).join('');
-                }
-
-                showTableError() {
-                    const tbody = document.getElementById('recentLoansBody');
-                    tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Error cargando préstamos recientes</td></tr>';
-                }
 
                 getStatusColor(status) {
                     const colors = {
